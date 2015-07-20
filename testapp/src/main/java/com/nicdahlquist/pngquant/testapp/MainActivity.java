@@ -1,10 +1,11 @@
 package com.nicdahlquist.pngquant.testapp;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -15,15 +16,28 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.button);
+        final TextView textView = (TextView) findViewById(R.id.textView);
+
+        final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long startMillis = System.currentTimeMillis();
-                mPngQuantTest.testPngQuant(MainActivity.this);
-                long endMillis = System.currentTimeMillis();
+                textView.setText("Processing...");
 
-                Log.i("MainActivity", "Processing took " + (endMillis - startMillis) + " millis.");
+                new AsyncTask<Void, Void, Long>() {
+                    @Override
+                    protected Long doInBackground(Void... params) {
+                        long startMillis = System.currentTimeMillis();
+                        mPngQuantTest.testPngQuant(MainActivity.this);
+                        long endMillis = System.currentTimeMillis();
+                        return endMillis - startMillis;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Long millis) {
+                        textView.setText("Processing took " + millis + " millis.");
+                    }
+                }.execute();
             }
         });
     }
