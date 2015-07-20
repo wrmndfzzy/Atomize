@@ -17,6 +17,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void * reserved) {
     return JNI_VERSION_1_6;
 }
 
+static void log_callback(const liq_attr * attr, const char * msg, void * user_info) {
+    LOGI("%s" ,msg);
+}
+
 JNIEXPORT jboolean JNICALL Java_com_nicdahlquist_pngquant_LibPngQuant_nativePngQuantFile(JNIEnv * env, jobject obj, jstring jInFilename, jstring jOutFilename) {
     const char * inFilename = (*env)->GetStringUTFChars(env, jInFilename, 0);
     const char * outFilename = (*env)->GetStringUTFChars(env, jOutFilename, 0);
@@ -25,7 +29,11 @@ JNIEXPORT jboolean JNICALL Java_com_nicdahlquist_pngquant_LibPngQuant_nativePngQ
         .floyd = 1.f, // floyd-steinberg dithering
     };
     options.liq = liq_attr_create();
+
     options.verbose = true;
+    liq_set_log_callback(options.liq, log_callback, NULL);
+    options.log_callback = log_callback;
+
     pngquant_file(inFilename, outFilename, &options);
 
     (*env)->ReleaseStringUTFChars(env, jInFilename, inFilename);
