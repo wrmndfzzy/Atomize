@@ -8,7 +8,7 @@
 In your build.gradle:
 ```groovy
 dependencies {
-    compile 'com.ndahlquist:pngquant:0.0'
+    compile 'com.ndahlquist:pngquant-android:0.2'
 }
 
 ```
