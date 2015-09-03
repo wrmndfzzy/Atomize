@@ -7,11 +7,10 @@ checkout:
 
 dependencies:
   override:
-    - ./pngquant-android/install_ndk.sh
+    - ./gradlew dependencies installNdk
   cache_directories:
-    - ./android-ndk-r10e
+    - ./pngquant-android/android-ndk-r10e
 
 test:
   override:
-    - ./gradlew -s check
-    - ./gradlew -s assembleRelease
+    - ./gradlew -s check assembleRelease
