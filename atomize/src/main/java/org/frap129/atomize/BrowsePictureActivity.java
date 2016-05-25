@@ -17,23 +17,14 @@ public class BrowsePictureActivity extends Activity {
     public static String selectedImagePath;
 
     public void onCreate(Bundle savedInstanceState) {
+        Intent browseIntent = getIntent();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        findViewById(R.id.select)
-                .setOnClickListener(new View.OnClickListener() {
-
-                    public void onClick(View arg0) {
-
-                        // in onCreate or any event where your want the user to
-                        // select a file
-                        Intent intent = new Intent();
-                        intent.setType("image/png");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,
-                                "Select Picture"), SELECT_PICTURE);
-                    }
-                });
+        //setContentView(R.layout.activity_main);
+        Intent intent = new Intent();
+        intent.setType("image/png");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+        "Select Picture"), SELECT_PICTURE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

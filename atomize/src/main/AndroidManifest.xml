@@ -24,10 +24,6 @@
         <activity
             android:name=".BrowsePictureActivity"
             android:parentActivityName="org.frap129.atomize.MainActivity" >
-        <meta-data
-            android:name="android.support.MainActivity"
-            android:value="org.frap129.atomize.BrowsePictureActivity" />
-
         </activity>
 
     </application>

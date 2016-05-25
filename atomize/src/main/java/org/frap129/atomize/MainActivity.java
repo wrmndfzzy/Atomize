@@ -1,6 +1,7 @@
 package org.frap129.atomize;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        final Button select = (Button) findViewById(R.id.select);
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browseIntent = new Intent(MainActivity.this, BrowsePictureActivity.class);
+                startActivity(browseIntent);
+            }
+        });
 
         final Button atomize = (Button) findViewById(R.id.atomize);
         atomize.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +47,7 @@ public class MainActivity extends Activity {
 
                     @Override
                     protected void onPostExecute(Long millis) {
-                        Toast.makeText(MainActivity.this, "Done. Processing took " + millis + " millis.",
+                        Toast.makeText(MainActivity.this, "Done. Processing took " + millis + "ms.",
                                 Toast.LENGTH_LONG).show();
                     }
                 }.execute();
