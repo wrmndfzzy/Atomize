@@ -1,41 +1,44 @@
-package com.nicdahlquist.pngquant.testapp;
+package org.frap129.atomize;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nicdahlquist.pngquant.LibPngQuant;
+
+import java.io.File;
 
 public class MainActivity extends Activity {
-
-    private final PngQuantTest mPngQuantTest = new PngQuantTest();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView textView = (TextView) findViewById(R.id.textView);
-
-        final Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        final Button atomize = (Button) findViewById(R.id.atomize);
+        atomize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText("Processing...");
+                Toast.makeText(MainActivity.this, "Atomizing...",
+                        Toast.LENGTH_LONG).show();
 
                 new AsyncTask<Void, Void, Long>() {
                     @Override
                     protected Long doInBackground(Void... params) {
                         long startMillis = System.currentTimeMillis();
-                        mPngQuantTest.testPngQuant(MainActivity.this);
+                        File picture = new File(BrowsePictureActivity.selectedImagePath);
+                        new LibPngQuant().pngQuantFile(picture, picture);
                         long endMillis = System.currentTimeMillis();
                         return endMillis - startMillis;
                     }
 
                     @Override
                     protected void onPostExecute(Long millis) {
-                        textView.setText("Processing took " + millis + " millis.");
+                        Toast.makeText(MainActivity.this, "Done. Processing took " + millis + " millis.",
+                                Toast.LENGTH_LONG).show();
                     }
                 }.execute();
             }
