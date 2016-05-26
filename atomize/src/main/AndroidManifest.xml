@@ -20,12 +20,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity
-            android:name=".BrowsePictureActivity"
-            android:parentActivityName="org.frap129.atomize.MainActivity" >
-        </activity>
-
     </application>
 
 </manifest>
