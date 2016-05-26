@@ -26,6 +26,7 @@
         android:text="Atomize!"
         android:id="@+id/atomize"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="atomize" />
 
 </RelativeLayout>

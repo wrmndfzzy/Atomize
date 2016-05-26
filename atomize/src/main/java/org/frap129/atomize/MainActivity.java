@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import com.nicdahlquist.pngquant.LibPngQuant;
 
-import java.io.File;
-
 public class MainActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
@@ -39,15 +37,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
-            }
-        }
-    }
-
     public String getPath(Uri uri) {
         // just some safety built in
         if( uri == null ) {
@@ -57,7 +46,7 @@ public class MainActivity extends Activity {
         // try to retrieve the image from the media store first
         // this will only work for images selected from gallery
         String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
         if( cursor != null ){
             int column_index = cursor
                     .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -66,33 +55,36 @@ public class MainActivity extends Activity {
         }
         // this is our fallback here
         return uri.getPath();
+    }
 
-        // listen for atomize once picture is chosen
-        final Button atomize = (Button) findViewById(R.id.atomize);
-        atomize.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Atomizing...",
-                        Toast.LENGTH_LONG).show();
-
-                new AsyncTask<Void, Void, Long>() {
-                    @Override
-                    protected Long doInBackground(Void... params) {
-                        long startMillis = System.currentTimeMillis();
-                        File picture = new File(selectedImagePath);
-                        new LibPngQuant().pngQuantFile(picture, picture);
-                        long endMillis = System.currentTimeMillis();
-                        return endMillis - startMillis;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Long millis) {
-                        Toast.makeText(MainActivity.this, "Done. Processing took " + millis + "ms.",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }.execute();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                selectedImagePath = getPath(selectedImageUri);
             }
-        });
+        }
+    }
 
+    // listen for atomize once picture is chosen
+    public void atomize(View v) {
+        Toast.makeText(MainActivity.this, "Atomizing...",
+                Toast.LENGTH_LONG).show();
+
+        new AsyncTask<Void, Void, Long>() {
+            protected Long doInBackground(Void... params) {
+                long startMillis = System.currentTimeMillis();
+                String inPicture = selectedImagePath;
+                String outPicture = selectedImagePath+"quant.png";
+                new LibPngQuant().pngQuantFile(inPicture, outPicture);
+                long endMillis = System.currentTimeMillis();
+                return endMillis - startMillis;
+            }
+
+            protected void onPostExecute(Long millis) {
+                Toast.makeText(MainActivity.this, "Done. Processing took " + millis + "ms.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 }
