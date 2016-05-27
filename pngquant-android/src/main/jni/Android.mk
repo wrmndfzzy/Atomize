@@ -22,7 +22,7 @@ LOCAL_SRC_FILES := \
     libpng-android/jni/pngwutil.c
 
 LOCAL_SHARED_LIBRARIES := -lz
-LOCAL_CFLAGS           := -O3
+LOCAL_CFLAGS           := -O3 -fopenmp -DOPENMP
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/libpng-android/jni/.
 
 include $(BUILD_STATIC_LIBRARY)
@@ -40,7 +40,7 @@ LOCAL_SRC_FILES        := \
      pngquant/lib/pam.c \
      pngquant/lib/viter.c
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/pngquant/.
-LOCAL_CFLAGS           := -std=c99 -O3
+LOCAL_CFLAGS           := -std=c99 -O3 -fopenmp -DOPENMP
 LOCAL_STATIC_LIBRARIES := libpng
 
 include $(BUILD_STATIC_LIBRARY)
@@ -53,7 +53,7 @@ LOCAL_LDLIBS           := -lz \
                           -llog \
                           -lm
 LOCAL_STATIC_LIBRARIES += libpng libpngquant
-LOCAL_CFLAGS           := -std=c99 -O3
+LOCAL_CFLAGS           := -std=c99 -O3 -fopenmp -DOPENMP
 LOCAL_SRC_FILES        += native_glue.c \
                           pngquant.c
 
