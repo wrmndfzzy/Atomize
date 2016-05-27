@@ -3,6 +3,7 @@ package com.nicdahlquist.pngquant;
 public class LibPngQuant {
 
     public boolean pngQuantFile(String inputFilename, String outputFilename) {
+
         return nativePngQuantFile(inputFilename, outputFilename);
     }
 

@@ -29,4 +29,29 @@
         android:layout_centerHorizontal="true"
         android:onClick="atomize" />
 
+    <TextView
+        android:id="@+id/noImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="No image selected."
+        android:layout_below="@id/select" />
+
+    <ImageView
+        android:id="@+id/imgPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select"
+        android:layout_margin="10dp"
+        android:layout_above="@id/atomize"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="5pt"
+        android:text="Developed by Team Wrm and Fzzy."
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
