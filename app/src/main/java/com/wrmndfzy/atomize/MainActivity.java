@@ -23,6 +23,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import com.nicdahlquist.pngquant.LibPngQuant;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView noImg;
@@ -42,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         noImg = (TextView) findViewById(R.id.noImg);
         final Button select = (Button) findViewById(R.id.select);
-
-        int permissionCheckR = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        int permissionCheckW = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -94,14 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                } else {
-
+                if (grantResults.length <= 0
+                        && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(MainActivity.this, "Write permissions are required to run this app.", Toast.LENGTH_LONG).show();
@@ -110,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
-                return;
             }
 
             // other 'case' lines to check for other
@@ -149,11 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
     // listen for atomize once picture is chosen
     public void atomize(View v) {
-        if(imgSelected == true){
-            if(extFolder.exists() && extFolder.isDirectory()){
-
-            }
-            else{
+        if(imgSelected){
+            if(!extFolder.exists() && !extFolder.isDirectory()){
                 try{
                     extFolder.mkdirs();
                 }
@@ -161,9 +150,17 @@ public class MainActivity extends AppCompatActivity {
                     //fileProbDialog();
                 }
             }
+            quantize();
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void quantize() {
+        File input = new File(selectedImagePath);
+        String imageName = input.getName();
+        File output = new File(extFolder + "/" + imageName);
+        new LibPngQuant().pngQuantFile(input, output);
     }
 }
