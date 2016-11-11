@@ -1,1 +1,1 @@
-include ':pngquant-android', ':atomize'
+include ':app'
