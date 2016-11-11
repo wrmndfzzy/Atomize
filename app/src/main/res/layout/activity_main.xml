@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/devBy"
         android:textSize="5pt"
-        android:text="Developed by Team Wrm and Fzzy."
+        android:text="Developed by Team Wrmndfzzy."
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
