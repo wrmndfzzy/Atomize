@@ -1,27 +1,13 @@
-## pngquant-android
-[![Circle CI](https://circleci.com/gh/ndahlquist/pngquant-android.svg?style=svg)](https://circleci.com/gh/ndahlquist/pngquant-android)
-[![Download](https://api.bintray.com/packages/ndahlquist/maven/pngquant-android/images/download.svg) ](https://bintray.com/ndahlquist/maven/pngquant-android/_latestVersion)
+Atomize
+=======
+Summary
+-------
+Atomize is the simplest PNG image compression app available for Android 5.0 and up. Developed by Team Wrmndfzzy, Atomize can shrink the file size of an image significantly, often as much as by 70%, and maintains an images transparency with little to no loss in quality.
 
-[pngquant](https://pngquant.org/) with basic Java bindings for Android.
-![pngquant](https://pngquant.org/pngquant-logo.png)
+Instructions
+------------
+Simply select an image, check the preview to confirm you selected the correct image, and press Atomize! The compression process can take up to 1 minute on low end devices, but should complete within seconds on relatively modern spec devices.
 
-###Usage:
-In your build.gradle:
-```groovy
-dependencies {
-    compile 'com.ndahlquist:pngquant-android:0.2'
-}
-
-```
-
-In your Android app:
-```java
-File inputPngFile = getYourPng();
-File outputPngFile = getOutputFile();
-new LibPngQuant().pngQuantFile(inputFile, outputFile);
-```
-
-###Building:
-- This project includes git submodules; please make sure to `git clone --recursive`. Alternatively, `git submodule init; git submodule update`.
-- On OS X, please install wget: `brew install wget`.
-- From the top-level directory, run `./gradlew installDebug`. This will download all dependencies, build the library, and install a test application to a connected Android device.
+Theory
+------
+Similar to desktop compression programs - such as Pngyu, PNGoo, and ImageAlpha - Atomize is simply a front-end for the pngquant lossy compression binary.
