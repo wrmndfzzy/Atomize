@@ -54,15 +54,11 @@ public class MainActivity extends AppCompatActivity {
         deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
 
         // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
 
         select.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,9 +137,8 @@ public class MainActivity extends AppCompatActivity {
         if(imgSelected){
             if(!extFolder.exists() && !extFolder.isDirectory()){
                 try{
-                    if (!extFolder.mkdirs()) {
+                    if (!extFolder.mkdirs())
                         Log.d("extFolder", "directory cannot be created");
-                    }
                 }
                 catch(Exception e){
                     //fileProbDialog();
@@ -152,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_LONG).show();
             quantize();
             Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_LONG).show();
+            preView.setVisibility(View.GONE);
+            noImg.setVisibility(View.VISIBLE);
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_LONG).show();
@@ -159,30 +156,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void quantize() {
-        final Thread atomThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             public void run() {
 
                 File input = new File(selectedImagePath);
                 String imageName = input.getName();
                 File output = new File(extFolder + "/" + imageName);
                 if (output.exists()) {
-                    if (!output.delete()) {
+                    if (!output.delete())
                         Log.d("output", "exists, but cannot be deleted");
-                    }
-
                 }
                 new LibPngQuant().pngQuantFile(input, output);
                 if (deleteSwitch.isChecked()) {
-                    if (!input.delete()) {
+                    if (!input.delete())
                         Log.d("input", "cannot be deleted");
-                    }
+
                     Log.d("switch", "checked");
                 }
             }
-        });
-        atomThread.start();
-        preView.setVisibility(View.GONE);
-        noImg.setVisibility(View.VISIBLE);
+        }).start();
     }
 
     // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
@@ -195,9 +187,8 @@ public class MainActivity extends AppCompatActivity {
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
-                if ("primary".equalsIgnoreCase(type)) {
+                if ("primary".equalsIgnoreCase(type))
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
 
             }
             // DownloadsProvider
@@ -216,13 +207,12 @@ public class MainActivity extends AppCompatActivity {
                 final String type = split[0];
 
                 Uri contentUri = null;
-                if ("image".equals(type)) {
+                if ("image".equals(type))
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
+                else if ("video".equals(type))
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
+                else if ("audio".equals(type))
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
 
                 final String selection = "_id=?";
                 final String[] selectionArgs = new String[] {
@@ -233,13 +223,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        else if ("content".equalsIgnoreCase(uri.getScheme()))
             return getDataColumn(context, uri, null, null);
-        }
         // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        else if ("file".equalsIgnoreCase(uri.getScheme()))
             return uri.getPath();
-        }
 
         return null;
     }
