@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
 
+    Switch deleteSwitch;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         noImg = (TextView) findViewById(R.id.noImg);
         final Button select = (Button) findViewById(R.id.select);
+        deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -142,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
                     //fileProbDialog();
                 }
             }
+            Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_LONG).show();
             quantize();
+            Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_LONG).show();
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_LONG).show();
@@ -150,14 +157,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void quantize() {
-        new Thread(new Runnable() {
+        final Thread atomThread = new Thread(new Runnable() {
             public void run() {
+
                 File input = new File(selectedImagePath);
                 String imageName = input.getName();
                 File output = new File(extFolder + "/" + imageName);
+                if (output.exists()) {
+                    output.delete();
+
+                }
                 new LibPngQuant().pngQuantFile(input, output);
+                if (deleteSwitch.isChecked()) {
+                    input.delete();
+                    Log.d("switch", "checked");
+                }
             }
-        }).start();
+        });
+        atomThread.start();
     }
 
     // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
