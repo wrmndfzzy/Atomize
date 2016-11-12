@@ -150,10 +150,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void quantize() {
-        File input = new File(selectedImagePath);
-        String imageName = input.getName();
-        File output = new File(extFolder + "/" + imageName);
-        new LibPngQuant().pngQuantFile(input, output);
+        new Thread(new Runnable() {
+            public void run() {
+                File input = new File(selectedImagePath);
+                String imageName = input.getName();
+                File output = new File(extFolder + "/" + imageName);
+                new LibPngQuant().pngQuantFile(input, output);
+            }
+        }).start();
     }
 
     // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
