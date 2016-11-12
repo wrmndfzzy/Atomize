@@ -120,17 +120,20 @@ public class MainActivity extends AppCompatActivity {
 
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(this, selectedImageUri);
-                if (selectedImagePath != null)
-                imgSelected = true;
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                    Log.d("imgSelected", String.valueOf(bitmap));
-                    preView = (ImageView) findViewById(R.id.imgPreview);
-                    preView.setImageBitmap(bitmap);
-                    noImg.setVisibility(View.GONE);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (selectedImagePath != null) {
+                    imgSelected = true;
+                    try {
+                       Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                       Log.d("imgSelected", String.valueOf(bitmap));
+                       preView = (ImageView) findViewById(R.id.imgPreview);
+                       preView.setImageBitmap(bitmap);
+                       noImg.setVisibility(View.GONE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Select a locally stored image.", Toast.LENGTH_LONG).show();
                 }
             }
         }
