@@ -27,7 +27,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
-import com.nicdahlquist.pngquant.LibPngQuant;
+import com.wrmndfzzy.pngquant.LibPngQuant;
 
 public class MainActivity extends AppCompatActivity {
 
