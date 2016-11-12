@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(homeIntent);
                 }
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -144,7 +141,9 @@ public class MainActivity extends AppCompatActivity {
         if(imgSelected){
             if(!extFolder.exists() && !extFolder.isDirectory()){
                 try{
-                    extFolder.mkdirs();
+                    if (!extFolder.mkdirs()) {
+                        Log.d("extFolder", "directory cannot be created");
+                    }
                 }
                 catch(Exception e){
                     //fileProbDialog();
@@ -167,12 +166,16 @@ public class MainActivity extends AppCompatActivity {
                 String imageName = input.getName();
                 File output = new File(extFolder + "/" + imageName);
                 if (output.exists()) {
-                    output.delete();
+                    if (!output.delete()) {
+                        Log.d("output", "exists, but cannot be deleted");
+                    }
 
                 }
                 new LibPngQuant().pngQuantFile(input, output);
                 if (deleteSwitch.isChecked()) {
-                    input.delete();
+                    if (!input.delete()) {
+                        Log.d("input", "cannot be deleted");
+                    }
                     Log.d("switch", "checked");
                 }
             }
