@@ -181,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         atomThread.start();
+        preView.setVisibility(View.GONE);
+        noImg.setVisibility(View.VISIBLE);
     }
 
     // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
