@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -19,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.wrmndfzzy.pngquant.LibPngQuant;
@@ -37,11 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView preView;
     private static final int SELECT_PICTURE = 1;
     public static String selectedImagePath;
+    public static String imagePath;
+    public static String gone = "image does not exist";
     private boolean imgSelected = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
+    File tmpFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize/tmp");
 
     private Switch deleteSwitch;
 
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setType("image/png");
+                intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
             }
@@ -122,21 +129,31 @@ public class MainActivity extends AppCompatActivity {
 
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(this, selectedImageUri);
+                imagePath = handleImageType(selectedImagePath);
+                String selectedImageLocation = "Selected Image Path: " + selectedImagePath;
 
-                if (selectedImagePath != null) {
+                if (imagePath.equals(gone)) {
+                    Toast.makeText(MainActivity.this, "Selected image has either been\n" +
+                            "deleted or already Atomized.", Toast.LENGTH_LONG).show();
+                }
+                if (imagePath != null) {
                     imgSelected = true;
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                         Log.d("imgSelected", String.valueOf(bitmap));
                         preView = (ImageView) findViewById(R.id.imgPreview);
                         preView.setImageBitmap(bitmap);
-                        imgPath.setText("Selected Image Path: " + selectedImagePath);
+                        imgPath.setText(selectedImageLocation);
                         preView.setVisibility(View.VISIBLE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Select a locally stored image.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Please select a valid image.", Toast.LENGTH_LONG).show();
+                    SystemClock.sleep(1000);
+                    Toast.makeText(MainActivity.this, "Valid image types include:\n" +
+                            "PNG, JPEG, PJPEG, and BMP", Toast.LENGTH_LONG).show();
+                    imgSelected = false;
                 }
             }
         }
@@ -147,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
         if(imgSelected){
             if(!extFolder.exists() && !extFolder.isDirectory()){
                 try{
-                    extFolder.mkdirs();
+                    if (!extFolder.mkdirs())
+                        Log.e("extFolder", "directory cannot be created");
                 }
                 catch(Exception e){
                     //fileProbDialog();
-                    Log.d("extFolder", "directory cannot be created");
                 }
             }
-            AsyncTask quantTask = new AsyncTask<Object, Object, Void>() {
+            new AsyncTask<Object, Object, Void>() {
                 @Override
                 protected Void doInBackground(Object... params) {
                     quantize();
@@ -170,17 +187,18 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected void onPostExecute(Void v){
                     Log.d("quantize", "quantize done");
+                    String noImgText = "No image selected.";
                     quantProgress.setVisibility(View.INVISIBLE);
                     preView.setVisibility(View.GONE);
-                    imgPath.setText("No image selected.");
+                    imgPath.setText(noImgText);
                     Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                    imagePath = "";
                     selectedImagePath = "";
                     imgSelected = false;
                     atomButton.setEnabled(true);
                     atomButton.setAlpha(1.0f);
                 }
-            };
-            quantTask.execute();
+            }.execute();
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_SHORT).show();
@@ -188,26 +206,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void quantize() {
-        File input = new File(selectedImagePath);
+        File input = new File(imagePath);
         String imageName = input.getName();
         File output = new File(extFolder + "/" + imageName);
-        if (output.exists()) {
-            try {
-                //overWriteDialog();
-                output.delete();
+        boolean converted = false;
+        //Convert image if necessary, return if failed
+        if (!imagePath.equals(selectedImagePath)) {
+            if (!convertImage(selectedImagePath, imagePath)) {
+                Log.e("output", "exists, but cannot be deleted");
+                return;
             }
-
-            catch (Exception e){
-                Log.d("output", "exists, but cannot be deleted");
+            converted = true;
+        }
+        //If output already exists, delete it. If we can't delete
+        //it, interrupt the thread and log the error.
+        if (output.exists()) {
+            if (!output.delete()) {
+                Log.e("output", "exists, but cannot be deleted");
                 Thread.currentThread().interrupt();
             }
         }
         new LibPngQuant().pngQuantFile(input, output);
-        if (deleteSwitch.isChecked()) {
+        if (deleteSwitch.isChecked() || converted) {
             if (!input.delete())
-                Log.d("input", "cannot be deleted");
-
-            Log.d("switch", "checked");
+                Log.e("input", "cannot be deleted");
         }
     }
 
@@ -259,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme()))
             return getDataColumn(context, uri, null, null);
-        // File
+            // File
         else if ("file".equalsIgnoreCase(uri.getScheme()))
             return uri.getPath();
 
@@ -299,5 +321,60 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    //Checks if an image is a PNG, converts valid formats if not.
+    public String handleImageType(String path) {
+
+        String type = getFileType(path);
+
+        if ("png".equals(type)) {
+            return path;
+        } else if ("jpeg".equals(type) || "jpg".equals(type) || "pjpeg".equals(type) || "bmp".equals(type)) {
+            File input = new File(path);
+            String imageName = input.getName();
+            path = tmpFolder + "/" + imageName + ".png";
+            return path;
+        } else if (gone.equals(type)) {
+            return gone;
+        } else {
+            return null;
+        }
+
+    }
+
+    public static String getFileType(String path) {
+        File input = new File(path);
+        if (!input.exists())
+            return gone;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        Log.d("getFileType", extension);
+        return extension;
+    }
+
+    public boolean convertImage(String path, String outPath) {
+
+        if(!tmpFolder.exists() && !tmpFolder.isDirectory()){
+            if (!tmpFolder.mkdirs())
+                Log.e("tmpFolder", "directory cannot be created");
+        }
+
+        try {
+            File orig = new File(path);
+            Bitmap bmp = BitmapFactory.decodeFile(path);
+            FileOutputStream out = new FileOutputStream(outPath);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out); //100-best quality
+            out.close();
+            Log.d("convertImage", "converted " + path + " to " + outPath);
+            if (deleteSwitch.isChecked()) {
+                if (!orig.delete())
+                    Log.e("orig", "cannot be deleted");
+
+                Log.d("switch", "checked");
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
