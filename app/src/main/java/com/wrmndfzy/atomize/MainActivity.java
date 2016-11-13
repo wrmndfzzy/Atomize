@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int SELECT_PICTURE = 1;
     public static String selectedImagePath;
     private boolean imgSelected = false;
+    public boolean quantComplete = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
@@ -146,9 +148,15 @@ public class MainActivity extends AppCompatActivity {
             }
             Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_LONG).show();
             quantize();
+            while (!quantComplete) {
+                SystemClock.sleep(500);
+            }
             Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_LONG).show();
             preView.setVisibility(View.GONE);
             noImg.setVisibility(View.VISIBLE);
+            selectedImagePath = "";
+            imgSelected = false;
+            quantComplete = false;
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_LONG).show();
@@ -158,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
     public void quantize() {
         new Thread(new Runnable() {
             public void run() {
-
                 File input = new File(selectedImagePath);
                 String imageName = input.getName();
                 File output = new File(extFolder + "/" + imageName);
@@ -173,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.d("switch", "checked");
                 }
+                quantComplete = true;
             }
         }).start();
     }
