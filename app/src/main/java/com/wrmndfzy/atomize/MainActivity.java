@@ -1,6 +1,7 @@
 package com.wrmndfzy.atomize;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -47,7 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
     private Button atomButton;
 
+    File input;
+    File output;
+    private EditText fnEdit;
+    public String imageName;
+
     private ProgressBar quantProgress;
+
+    Button fnDialogCancel;
+    Button fnDialogConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,49 +164,49 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("extFolder", "directory cannot be created");
                 }
             }
-            AsyncTask quantTask = new AsyncTask<Object, Object, Void>() {
-                @Override
-                protected Void doInBackground(Object... params) {
-                    quantize();
-                    return null;
-                }
-                @Override
-                protected void onPreExecute(){
-                    Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
-                    quantProgress.setVisibility(View.VISIBLE);
-                    atomButton.setEnabled(false);
-                    atomButton.setAlpha(0.4f);
-                }
-                @Override
-                protected void onPostExecute(Void v){
-                    Log.d("quantize", "quantize done");
-                    quantProgress.setVisibility(View.INVISIBLE);
-                    preView.setVisibility(View.GONE);
-                    imgPath.setText("No image selected.");
-                    Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_SHORT).show();
-                    selectedImagePath = "";
-                    imgSelected = false;
-                    atomButton.setEnabled(true);
-                    atomButton.setAlpha(1.0f);
-                }
-            };
-            quantTask.execute();
+            input = new File(selectedImagePath);
+            fileNameDialog();
         }
         else{
             Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_SHORT).show();
         }
     }
 
+    public void execQuantTask(){
+        output = new File(extFolder + "/" + imageName);
+        AsyncTask quantTask = new AsyncTask<Object, Object, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                quantize();
+                return null;
+            }
+            @Override
+            protected void onPreExecute(){
+                Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
+                quantProgress.setVisibility(View.VISIBLE);
+                atomButton.setEnabled(false);
+                atomButton.setAlpha(0.4f);
+            }
+            @Override
+            protected void onPostExecute(Void v){
+                Log.d("quantize", "quantize done");
+                Toast.makeText(MainActivity.this, "Done! Saved in /sdcard/Atomize.", Toast.LENGTH_SHORT).show();
+                quantProgress.setVisibility(View.INVISIBLE);
+                preView.setVisibility(View.GONE);
+                imgPath.setText("No image selected.");
+                selectedImagePath = "";
+                imgSelected = false;
+                atomButton.setEnabled(true);
+                atomButton.setAlpha(1.0f);
+            }
+        }.execute();
+    }
+
     public void quantize() {
-        File input = new File(selectedImagePath);
-        String imageName = input.getName();
-        File output = new File(extFolder + "/" + imageName);
         if (output.exists()) {
             try {
-                //overWriteDialog();
                 output.delete();
             }
-
             catch (Exception e){
                 Log.d("output", "exists, but cannot be deleted");
                 Thread.currentThread().interrupt();
@@ -299,5 +309,32 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    protected void fileNameDialog(){
+        final Dialog fnDialog = new Dialog(MainActivity.this);
+        fnDialog.setTitle("File Name");
+        fnDialog.setContentView(R.layout.filename_dialog);
+        fnEdit = (EditText) fnDialog.findViewById(R.id.fnDialogTextBox);
+        imageName = input.getName();
+        fnEdit.setText(imageName);
+        fnDialogCancel = (Button) fnDialog.findViewById(R.id.fnDialogCancel);
+        fnDialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fnDialog.dismiss();
+            }
+        });
+        fnDialogConfirm = (Button) fnDialog.findViewById(R.id.fnDialogConfirm);
+        fnDialogConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageName = fnEdit.getText().toString();
+                Log.d("imageName", imageName);
+                fnDialog.dismiss();
+                execQuantTask();
+            }
+        });
+        fnDialog.show();
     }
 }
