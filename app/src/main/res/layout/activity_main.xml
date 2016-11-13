@@ -16,20 +16,20 @@
         android:layout_height="wrap_content"
         android:text="Select a photo"
         android:id="@+id/select"
-        android:layout_marginTop="37dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="false"
         android:backgroundTint="@color/colorPrimary"/>
 
     <TextView
-        android:id="@+id/noImg"
+        android:id="@+id/imgPath"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
         android:textColor="#9e9e9e"
         android:layout_centerHorizontal="true"
+        android:textAlignment="center"
         android:text="No image selected."
         android:layout_below="@id/select" />
 
@@ -42,6 +42,16 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+        android:indeterminate="true"
+        android:layout_above="@id/devBy"
+        android:id="@+id/progBar"
+        android:layout_marginBottom="10dp"
+        android:visibility="invisible"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,8 +60,8 @@
         android:layout_centerHorizontal="true"
         android:onClick="atomize"
         android:backgroundTint="@color/colorPrimary"
-        android:layout_above="@id/devBy"
-        android:layout_marginBottom="20dp"/>
+        android:layout_above="@id/progBar"
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:layout_width="wrap_content"
@@ -77,8 +87,7 @@
         android:id="@+id/imgPreview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/select"
-        android:layout_margin="10dp"
+        android:layout_below="@id/imgPath"
         android:layout_above="@id/deleteSwitchHint" />
 
 </RelativeLayout>

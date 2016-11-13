@@ -8,8 +8,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,28 +33,34 @@ import com.wrmndfzzy.pngquant.LibPngQuant;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView noImg;
-    ImageView preView;
+    private TextView imgPath;
+    private ImageView preView;
     private static final int SELECT_PICTURE = 1;
     public static String selectedImagePath;
     private boolean imgSelected = false;
-    public boolean quantComplete = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
 
-    Switch deleteSwitch;
+    private Switch deleteSwitch;
 
+    private Button atomButton;
+
+    private ProgressBar quantProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        noImg = (TextView) findViewById(R.id.noImg);
+        imgPath = (TextView) findViewById(R.id.imgPath);
         final Button select = (Button) findViewById(R.id.select);
         deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
+
+        atomButton = (Button) findViewById(R.id.atomize);
+
+        quantProgress = (ProgressBar) findViewById(R.id.progBar);
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
@@ -119,11 +126,12 @@ public class MainActivity extends AppCompatActivity {
                 if (selectedImagePath != null) {
                     imgSelected = true;
                     try {
-                       Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                       Log.d("imgSelected", String.valueOf(bitmap));
-                       preView = (ImageView) findViewById(R.id.imgPreview);
-                       preView.setImageBitmap(bitmap);
-                       noImg.setVisibility(View.GONE);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                        Log.d("imgSelected", String.valueOf(bitmap));
+                        preView = (ImageView) findViewById(R.id.imgPreview);
+                        preView.setImageBitmap(bitmap);
+                        imgPath.setText("Selected Image Path: " + selectedImagePath);
+                        preView.setVisibility(View.VISIBLE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -139,50 +147,68 @@ public class MainActivity extends AppCompatActivity {
         if(imgSelected){
             if(!extFolder.exists() && !extFolder.isDirectory()){
                 try{
-                    if (!extFolder.mkdirs())
-                        Log.d("extFolder", "directory cannot be created");
+                    extFolder.mkdirs();
                 }
                 catch(Exception e){
                     //fileProbDialog();
+                    Log.d("extFolder", "directory cannot be created");
                 }
             }
-            Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_LONG).show();
-            quantize();
-            while (!quantComplete) {
-                SystemClock.sleep(500);
-            }
-            Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_LONG).show();
-            preView.setVisibility(View.GONE);
-            noImg.setVisibility(View.VISIBLE);
-            selectedImagePath = "";
-            imgSelected = false;
-            quantComplete = false;
+            AsyncTask quantTask = new AsyncTask<Object, Object, Void>() {
+                @Override
+                protected Void doInBackground(Object... params) {
+                    quantize();
+                    return null;
+                }
+                @Override
+                protected void onPreExecute(){
+                    Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
+                    quantProgress.setVisibility(View.VISIBLE);
+                    atomButton.setEnabled(false);
+                    atomButton.setAlpha(0.4f);
+                }
+                @Override
+                protected void onPostExecute(Void v){
+                    Log.d("quantize", "quantize done");
+                    quantProgress.setVisibility(View.INVISIBLE);
+                    preView.setVisibility(View.GONE);
+                    imgPath.setText("No image selected.");
+                    Toast.makeText(MainActivity.this, "Done!", Toast.LENGTH_SHORT).show();
+                    selectedImagePath = "";
+                    imgSelected = false;
+                    atomButton.setEnabled(true);
+                    atomButton.setAlpha(1.0f);
+                }
+            };
+            quantTask.execute();
         }
         else{
-            Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void quantize() {
-        new Thread(new Runnable() {
-            public void run() {
-                File input = new File(selectedImagePath);
-                String imageName = input.getName();
-                File output = new File(extFolder + "/" + imageName);
-                if (output.exists()) {
-                    if (!output.delete())
-                        Log.d("output", "exists, but cannot be deleted");
-                }
-                new LibPngQuant().pngQuantFile(input, output);
-                if (deleteSwitch.isChecked()) {
-                    if (!input.delete())
-                        Log.d("input", "cannot be deleted");
-
-                    Log.d("switch", "checked");
-                }
-                quantComplete = true;
+        File input = new File(selectedImagePath);
+        String imageName = input.getName();
+        File output = new File(extFolder + "/" + imageName);
+        if (output.exists()) {
+            try {
+                //overWriteDialog();
+                output.delete();
             }
-        }).start();
+
+            catch (Exception e){
+                Log.d("output", "exists, but cannot be deleted");
+                Thread.currentThread().interrupt();
+            }
+        }
+        new LibPngQuant().pngQuantFile(input, output);
+        if (deleteSwitch.isChecked()) {
+            if (!input.delete())
+                Log.d("input", "cannot be deleted");
+
+            Log.d("switch", "checked");
+        }
     }
 
     // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
