@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
-        applicationId "com.wrmndfzy.atomize"
+        applicationId "com.wrmndfzzy.atomize"
         minSdkVersion 21
         targetSdkVersion 24
         versionCode 1
@@ -31,4 +31,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile project(':pngquant-android')
+    compile 'id.zelory:compressor:1.0.3'
+    compile 'com.github.paolorotolo:appintro:3.4.0'
 }
