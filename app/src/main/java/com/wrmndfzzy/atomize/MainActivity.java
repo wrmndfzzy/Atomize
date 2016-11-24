@@ -5,14 +5,12 @@ import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -135,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Thanks: http://codetheory.in/android-pick-select-image-from-gallery-with-intents/
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String invSel = "Invalid selection.";
+        String invFile = "Invalid file type.";
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
@@ -147,14 +147,14 @@ public class MainActivity extends AppCompatActivity {
                 if (imagePath == gone) {
                     Toast.makeText(MainActivity.this, "Selected image has either been\n" +
                             "deleted or already Atomized.", Toast.LENGTH_LONG).show();
-                    imgPath.setText("Invalid selection.");
-                    preView.setVisibility(View.GONE);
+                    imgPath.setText(invSel);
+                    preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                     imgSelected = false;
                 }
                 else if (imagePath == null){
                     Toast.makeText(MainActivity.this, "Please select a valid PNG file.", Toast.LENGTH_LONG).show();
-                    imgPath.setText("Invalid file type.");
-                    preView.setVisibility(View.GONE);
+                    imgPath.setText(invFile);
+                    preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                     imgSelected = false;
                 }
                 else{
@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("imgSelected", String.valueOf(bitmap));
                         preView.setImageBitmap(bitmap);
                         imgPath.setText(selectedImageLocation);
-                        preView.setVisibility(View.VISIBLE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -215,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 String noImgText = "No image selected.";
                 Toast.makeText(MainActivity.this, "Done! Saved in /sdcard/Atomize.", Toast.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.INVISIBLE);
-                preView.setVisibility(View.GONE);
+                preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                 imgPath.setText(noImgText);
                 selectedImagePath = "";
                 imgSelected = false;

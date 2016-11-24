@@ -6,11 +6,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Name the file you want to save:"
+        android:text="@string/nameFile"
         android:layout_margin="20dp"
-        android:id="@+id/fnDialogHint"/>
+        android:id="@+id/fnDialogHint"
+        android:labelFor="@+id/fnDialogTextBox" />
 
     <EditText
         android:layout_width="match_parent"
@@ -18,16 +19,18 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:layout_below="@id/fnDialogHint"
-        android:id="@+id/fnDialogTextBox"
-        android:textColor="@android:color/white" />
+        android:id="@id/fnDialogTextBox"
+        android:textColor="@android:color/white"
+        android:hint="@string/nameHint"
+        android:textColorHint="@color/colorPrimary" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fnDialogTextBox"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:id="@+id/fnDialogCancel"
-        android:text="Cancel"
+        android:text="@string/cancelText"
         android:textColor="@color/colorAccent"
         android:background="@android:color/transparent"/>
 
@@ -35,9 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fnDialogTextBox"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:id="@+id/fnDialogConfirm"
-        android:text="OK"
+        android:text="@string/confirmText"
         android:textColor="@color/colorAccent"
         android:background="@android:color/transparent" />
 

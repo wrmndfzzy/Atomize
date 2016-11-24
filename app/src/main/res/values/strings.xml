@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Atomize</string>
+
+    <string name="select_photo">Select a photo</string>
+    <string name="no_image">No image selected.</string>
+    <string name="devBy">Developed by Team Wrmndfzzy.</string>
+    <string name="atomString">Atomize!</string>
+    <string name="delString">Delete original file when done?</string>
+
+    <string name="nameFile">Name the file you want to save:</string>
+    <string name="nameHint">Filename</string>
+    <string name="cancelText">Cancel</string>
+    <string name="confirmText">OK</string>
 </resources>
