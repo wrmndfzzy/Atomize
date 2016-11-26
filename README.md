@@ -2,11 +2,11 @@ Atomize
 =======
 Summary
 -------
-Atomize is the simplest PNG image compression app available for Android 5.0 and up. Developed by Team Wrmndfzzy, Atomize can shrink the file size of an image significantly, often as much as by 70%, and maintains an images transparency with little to no loss in quality.
+Atomize is the simplest PNG image compression app available for Android 5.0 and up. Developed by Team Wrmndfzzy, Atomize can shrink the file size of an image significantly, often by as much as by 70%, and maintains an image's transparency with little to no loss in quality.
 
 Instructions
 ------------
-Simply select an image, check the preview to confirm you selected the correct image, and press Atomize! The compression process can take up to 1 minute on low end devices, but should complete within seconds on relatively modern spec devices.
+Simply select a PNG image, check the preview to confirm you selected the correct image, and press Atomize! The compression process can take up to a few minutes on low end devices, but should complete within seconds on relatively modern spec devices.
 
 Theory
 ------

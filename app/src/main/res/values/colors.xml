@@ -4,4 +4,9 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#b71c1c</color>
     <color name="colorBackground">#212121</color>
+
+    <color name="intro_slide1_color">#B71C1C</color>
+    <color name="intro_slide2_color">#0D47A1</color>
+    <color name="intro_slide3_color">#1B5E20</color>
+    <color name="intro_slide4_color">#7B1FA2</color>
 </resources>

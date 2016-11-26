@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -19,6 +21,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -66,6 +70,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //  Initialize SharedPreferences
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
+                //  Create a new boolean and preference and set it to true
+                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+                //  If the activity has never started before...
+                if (isFirstStart) {
+                    //  Launch app intro
+                    Intent i = new Intent(MainActivity.this, com.wrmndfzzy.atomize.intro.IntroActivity.class);
+                    startActivity(i);
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+                    //  Edit preference to make it false because we don't want this to run again
+                    e.putBoolean("firstStart", false);
+                    //  Apply changes
+                    e.apply();
+                }
+            }
+        });
+        // Start the thread
+        t.start();
+
         setContentView(R.layout.activity_main);
 
         imgPath = (TextView) findViewById(R.id.imgPath);
@@ -79,16 +108,15 @@ public class MainActivity extends AppCompatActivity {
 
         quantProgress = (ProgressBar) findViewById(R.id.progBar);
 
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
                 Intent intent = new Intent();
                 intent.setType("image/png");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -112,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
-                return;
+                break;
             }
 
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
@@ -127,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
+                break;
             }
         }
     }
@@ -389,5 +418,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         fnDialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            /*case R.id.menu_settingslink:
+                Intent k = new Intent(this, SettingsActivity.class);
+                startActivity(k);
+                return true;
+            case R.id.menu_helplink:
+                Intent j = new Intent(this, HelpActivity.class);
+                startActivity(j);
+                return true;*/
+            case R.id.menu_aboutlink:
+                Intent i = new Intent(this, AboutActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
