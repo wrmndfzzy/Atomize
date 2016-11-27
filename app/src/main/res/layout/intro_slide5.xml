@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/intro_slide5_color"
     android:layout_weight="10"
-    android:id="@+id/introSlide1">
+    android:id="@+id/introSlide5">
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,7 +16,7 @@
         android:paddingRight="32dp"
         android:textSize="28sp"
         android:textColor="@android:color/white"
-        android:text="@string/intro_slide1_title" />
+        android:text="@string/intro_slide5_title"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -26,14 +26,14 @@
         android:layout_weight="5">
 
         <ImageView
-            android:id="@+id/introSlide1Img"
+            android:id="@+id/introSlide5Img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:contentDescription="@null"
-            android:src="@drawable/intro_slide_1_icon"/>
+            android:src="@drawable/intro_slide_5_icon"/>
 
     </LinearLayout>
 
@@ -47,7 +47,7 @@
         android:paddingRight="64dp"
         android:textSize="16sp"
         android:textColor="@android:color/white"
-        android:text="@string/intro_slide1_content"/>
+        android:text="@string/intro_slide5_content"/>
 
     <TextView
         android:layout_width="fill_parent"

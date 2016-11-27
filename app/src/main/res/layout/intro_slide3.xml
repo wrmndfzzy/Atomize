@@ -26,7 +26,7 @@
         android:layout_weight="5">
 
         <ImageView
-            android:id="@+id/introSlide1Img"
+            android:id="@+id/introSlide3Img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/aaDialogToolbar">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_atom"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:contentDescription="@null"
+            android:id="@+id/aboutIcon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textSize="20sp" />
+
+    </Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/atomizeReadme"
+        android:layout_below="@id/aaDialogToolbar"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/atom_description"
+            android:lineSpacingMultiplier="1.15"
+            android:padding="20dp"
+            android:layout_weight="1.0"/>
+    </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/aaDialogConfirm"
+        android:text="@string/confirmText"
+        android:textColor="@color/colorAccent"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/atomizeReadme"/>
+
+</RelativeLayout>

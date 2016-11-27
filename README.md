@@ -10,4 +10,4 @@ Simply select a PNG image, check the preview to confirm you selected the correct
 
 Theory
 ------
-Similar to desktop compression programs - such as Pngyu, PNGoo, and ImageAlpha - Atomize is simply a front-end for the pngquant lossy compression binary.
+Similar to desktop compression programs such as Pngyu, PNGoo, and ImageAlpha, Atomize is simply a front-end for the pngquant lossy compression binary.

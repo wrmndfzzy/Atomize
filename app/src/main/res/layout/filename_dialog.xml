@@ -32,6 +32,7 @@
         android:id="@+id/fnDialogCancel"
         android:text="@string/cancelText"
         android:textColor="@color/colorAccent"
+        android:paddingBottom="10dp"
         android:background="@android:color/transparent"/>
 
     <Button
@@ -42,6 +43,7 @@
         android:id="@+id/fnDialogConfirm"
         android:text="@string/confirmText"
         android:textColor="@color/colorAccent"
+        android:paddingBottom="10dp"
         android:background="@android:color/transparent" />
 
 </RelativeLayout>
