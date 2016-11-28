@@ -20,18 +20,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".AboutActivity"
             android:label="@string/aboutactivity_label"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTTIVITY"
                 android:value="com.wrmndfzzy.atomize.MainActivity" />
         </activity>
         <activity
-            android:name="com.wrmndfzzy.atomize.intro.IntroActivity"
-            android:theme="@style/IntroTheme"
+            android:name=".intro.IntroActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/IntroTheme"></activity>
+        <activity android:name=".SettingsActivity"
+            android:label="@string/settingsactivity_label"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTTIVITY"
+                android:value="com.wrmndfzzy.atomize.MainActivity" />
         </activity>
     </application>
 
