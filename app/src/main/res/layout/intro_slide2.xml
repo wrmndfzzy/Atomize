@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/intro_slide2_color"
+    android:background="@android:color/transparent"
     android:layout_weight="10"
     android:id="@+id/introSlide2">
 

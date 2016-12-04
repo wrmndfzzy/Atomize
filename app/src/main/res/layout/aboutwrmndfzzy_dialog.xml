@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:paddingTop="10dp"
+        android:id="@+id/wrmndfzzylogo"
+        android:src="@drawable/wrmndfzzy"/>
+
+    <us.feras.mdv.MarkdownView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/wrmndfzzyReadme"
+        android:layout_below="@id/wrmndfzzylogo"
+        android:scrollbars="vertical"
+        android:fillViewport="true"
+        android:background="@color/colorBackground"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/awDialogConfirm"
+        android:text="@string/confirmText"
+        android:textColor="@color/colorAccent"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/wrmndfzzyReadme"/>
+
+</RelativeLayout>

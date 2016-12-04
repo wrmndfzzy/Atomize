@@ -2,15 +2,17 @@
     <string name="app_name">Atomize</string>
 
     <string name="intro_slide1_title">Welcome to Atomize!</string>
-    <string name="intro_slide1_content">The only PNG compression app for Android</string>
+    <string name="intro_slide1_content">The best image compression app for Android</string>
     <string name="intro_slide2_title">Free up space on your phone</string>
     <string name="intro_slide2_content">Reduce the file size of your pictures through compression and save space for other files</string>
     <string name="intro_slide3_title">High quality compression</string>
-    <string name="intro_slide3_content">Save space with a negligible loss in image quality</string>
+    <string name="intro_slide3_content">Save space with a negligible loss in image quality and no change in resolution</string>
     <string name="intro_slide4_title">Permissions</string>
-    <string name="intro_slide4_content">Atomize requires and will now ask for read and write permissions for storage</string>
+    <string name="intro_slide4_content">Atomize requires read and write permissions for storage</string>
+    <string name="intro_slide4_button">Grant Permissions</string>
     <string name="intro_slide5_title">Let\'s go!</string>
     <string name="intro_slide5_content">Hit the button below to get started</string>
+    <string name="intro_permissions_notification">NOTE: You have not given the app the permissions it requires to operate. You can always give the app the permissions later when it needs them.</string>
 
     <string name="select_photo">Select a photo</string>
     <string name="no_image">No image selected.</string>
@@ -26,10 +28,6 @@
     <string name="menu_about_label">About</string>
 
     <string name="aboutactivity_label">About</string>
-    <string name="atom_description">Atomize\n=======\n\n\nSummary\n--------------\nAtomize is the simplest PNG image compression app available for Android 5.0 and up. Developed by Team Wrmndfzzy, Atomize can shrink
-        the file size of an image significantly, often by as much as by 70%, and maintains an image\'s transparency with little to no loss in quality.\n\n\nInstructions\n------------------\nSimply select a PNG image,
-        check the preview to confirm you selected the correct image, and press Atomize! The compression process can take up to a few minutes on low end devices, but should complete within seconds on relatively modern
-        spec devices.\n\n\nTheory\n-----------\nSimilar to desktop compression programs such as Pngyu, PNGoo, and ImageAlpha, Atomize is simply a front-end for the pngquant lossy compression binary.\n\n\nRelease Version: 1.0.0</string>
 
     <string name="settingsactivity_label">Settings</string>
 

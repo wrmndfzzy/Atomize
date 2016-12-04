@@ -29,21 +29,14 @@
 
     </Toolbar>
 
-    <ScrollView
+    <us.feras.mdv.MarkdownView
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:id="@+id/atomizeReadme"
         android:layout_below="@id/aaDialogToolbar"
         android:scrollbars="vertical"
-        android:fillViewport="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/atom_description"
-            android:lineSpacingMultiplier="1.15"
-            android:padding="20dp"
-            android:layout_weight="1.0"/>
-    </ScrollView>
+        android:fillViewport="true"
+        android:background="@color/colorBackground"/>
 
     <Button
         android:layout_width="wrap_content"
