@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 imagePath = handleImageType(selectedImagePath);
                 String selectedImageLocation = "Selected Image Path: " + selectedImagePath;
 
-                if (imagePath == gone) {
+                if (imagePath.equals(gone)) {
                     Toast.makeText(MainActivity.this, "Selected image has either been\n" +
                             "deleted or already Atomized.", Toast.LENGTH_LONG).show();
                     imgPath.setText(invSel);
