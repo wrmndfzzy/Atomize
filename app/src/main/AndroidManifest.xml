@@ -33,14 +33,6 @@
             android:name=".intro.IntroActivity"
             android:screenOrientation="portrait"
             android:theme="@style/IntroTheme"></activity>
-        <activity android:name=".SettingsActivity"
-            android:label="@string/settingsactivity_label"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTTIVITY"
-                android:value="com.wrmndfzzy.atomize.MainActivity" />
-        </activity>
     </application>
 
 </manifest>
