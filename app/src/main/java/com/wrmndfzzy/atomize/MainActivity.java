@@ -436,10 +436,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.menu_settingslink:
-                Intent k = new Intent(this, SettingsActivity.class);
-                startActivity(k);
-                return true;
             case R.id.menu_aboutlink:
                 Intent i = new Intent(this, AboutActivity.class);
                 startActivity(i);
