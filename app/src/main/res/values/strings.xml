@@ -2,7 +2,7 @@
     <string name="app_name">Atomize</string>
 
     <string name="intro_slide1_title">Welcome to Atomize!</string>
-    <string name="intro_slide1_content">The best image compression app for Android</string>
+    <string name="intro_slide1_content">The best PNG image compression app for Android</string>
     <string name="intro_slide2_title">Free up space on your phone</string>
     <string name="intro_slide2_content">Reduce the file size of your pictures through compression and save space for other files</string>
     <string name="intro_slide3_title">High quality compression</string>
@@ -24,7 +24,6 @@
     <string name="cancelText">Cancel</string>
     <string name="confirmText">OK</string>
 
-    <string name="menu_settings_label">Settings</string>
     <string name="menu_about_label">About</string>
 
     <string name="aboutactivity_label">About</string>

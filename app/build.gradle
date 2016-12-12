@@ -34,5 +34,4 @@ dependencies {
     compile 'id.zelory:compressor:1.0.3'
     compile 'com.github.paolorotolo:appintro:3.4.0'
     compile 'us.feras.mdv:markdownview:1.1.0'
-    compile 'id.zelory:compressor:1.0.4'
 }

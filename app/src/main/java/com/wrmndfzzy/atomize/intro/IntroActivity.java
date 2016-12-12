@@ -52,20 +52,10 @@ public class IntroActivity extends AppIntro2 {
         // Override bar/separator color.
         /*setBarColor(Color.parseColor("#3F51B5"));
         setSeparatorColor(Color.parseColor("#2196F3"));*/
-        /*askForPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 4);
-        askForPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 4);
-        setSwipeLock(false);*/
 
         // Hide Skip/Done button.
-        //showSkipButton(false);
         setProgressButtonEnabled(true);
     }
-
-    /*@Override
-    public void onSkipPressed() {
-        // Do something when users tap on Skip button.
-        IntroActivity.this.finish();
-    }*/
 
     @Override
     public void onDonePressed() {
@@ -116,6 +106,9 @@ public class IntroActivity extends AppIntro2 {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
+                else{
+                    Toast.makeText(IntroActivity.this, "Read permissions granted!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
 
@@ -130,6 +123,9 @@ public class IntroActivity extends AppIntro2 {
                     homeIntent.addCategory( Intent.CATEGORY_HOME );
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
+                }
+                else{
+                    Toast.makeText(IntroActivity.this, "Write permissions granted!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }

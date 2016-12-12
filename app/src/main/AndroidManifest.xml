@@ -32,7 +32,7 @@
         <activity
             android:name=".intro.IntroActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/IntroTheme"></activity>
+            android:theme="@style/IntroTheme"/>
     </application>
 
 </manifest>

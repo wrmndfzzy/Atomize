@@ -39,15 +39,12 @@ import java.io.IOException;
 
 import com.wrmndfzzy.pngquant.LibPngQuant;
 
-import id.zelory.compressor.Compressor;
-
 public class MainActivity extends AppCompatActivity {
 
     private TextView imgPath;
     private ImageView preView;
     private static final int SELECT_PICTURE = 1;
     private static String selectedImagePath;
-    private static String imageType;
     private static String gone = "image does not exist";
     private boolean imgSelected = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
@@ -64,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     public String imageName;
 
     private ProgressBar quantProgress;
+
+    private String wrongFileType="wrongfiletype";
 
     Button fnDialogCancel;
     Button fnDialogConfirm;
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent();
-                intent.setType("image/*");
+                intent.setType("image/png");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
             }
@@ -147,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
+                else{
+                    Toast.makeText(MainActivity.this, "Read permissions granted!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
 
@@ -162,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
+                else{
+                    Toast.makeText(MainActivity.this, "Write permissions granted!", Toast.LENGTH_SHORT).show();
+                }
                 break;
             }
         }
@@ -174,38 +179,37 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-
                 Uri selectedImageUri = data.getData();
                 selectedImagePath = getPath(this, selectedImageUri);
-                imageType = handleImageType(selectedImagePath);
-                String selectedImageLocation = "Selected Image Path: " + selectedImagePath;
-
-                if (imageType.equals(gone)) {
-                    Toast.makeText(MainActivity.this, "Selected image has either been\n" +
-                            "deleted or already Atomized.", Toast.LENGTH_LONG).show();
-                    imgPath.setText(invSel);
-                    preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
-                    imgSelected = false;
-                }
-                else
-                if (imageType == null){
-                    Toast.makeText(MainActivity.this, "Please select a valid PNG or JPEG file.", Toast.LENGTH_LONG).show();
-                    imgPath.setText(invFile);
-                    preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
-                    imgSelected = false;
-                }
-                else{
-                    imgSelected = true;
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                        Log.d("imgSelected", String.valueOf(bitmap));
-                        preView.setImageBitmap(bitmap);
-                        imgPath.setText(selectedImageLocation);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (selectedImagePath != null) {
+                    String imageType = handleImageType(selectedImagePath);
+                    String selectedImageLocation = "Selected Image Path: " + selectedImagePath;
+                    if (imageType.equals(gone)) {
+                        Toast.makeText(MainActivity.this, "Selected image has either been\n" +
+                                "deleted or already Atomized.", Toast.LENGTH_LONG).show();
+                        imgPath.setText(invSel);
+                        preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
+                        imgSelected = false;
+                    } else if (imageType.equals(wrongFileType)) {
+                        Toast.makeText(MainActivity.this, "Please select a valid PNG file.", Toast.LENGTH_LONG).show();
+                        imgPath.setText(invFile);
+                        preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
+                        imgSelected = false;
+                    } else {
+                        imgSelected = true;
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                            Log.d("imgSelected", String.valueOf(bitmap));
+                            preView.setImageBitmap(bitmap);
+                            imgPath.setText(selectedImageLocation);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-
+                else {
+                    Toast.makeText(MainActivity.this, "Invalid File Path.", Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -271,54 +275,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         new LibPngQuant().pngQuantFile(input, output);
-        if (deleteSwitch.isChecked()) {
-            if (!input.delete())
-                Log.e("input", "cannot be deleted");
-        }
-    }
-
-    public void execCompressTask(){
-        output = new File(extFolder + "/" + imageName);
-        new AsyncTask<Object, Object, Void>() {
-            @Override
-            protected Void doInBackground(Object... params) {
-                compress();
-                return null;
-            }
-            @Override
-            protected void onPreExecute(){
-                Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
-                quantProgress.setVisibility(View.VISIBLE);
-                atomButton.setEnabled(false);
-                atomButton.setAlpha(0.4f);
-            }
-            @Override
-            protected void onPostExecute(Void v){
-                Log.d("compress", "compress done");
-                String noImgText = "No image selected.";
-                Toast.makeText(MainActivity.this, "Done! Saved in /sdcard/Atomize.", Toast.LENGTH_SHORT).show();
-                quantProgress.setVisibility(View.INVISIBLE);
-                preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
-                imgPath.setText(noImgText);
-                selectedImagePath = "";
-                imgSelected = false;
-                atomButton.setEnabled(true);
-                atomButton.setAlpha(1.0f);
-            }
-        }.execute();
-    }
-
-    public void compress() {
-        //If output already exists, delete it. If we can't delete
-        //it, interrupt the thread and log the error.
-        if (output.exists()) {
-            if (!output.delete()) {
-                Log.e("output", "exists, but cannot be deleted");
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        new Compressor.Builder(this).setDestinationDirectoryPath(extFolder + "/").build().compressToFile(input);
         if (deleteSwitch.isChecked()) {
             if (!input.delete())
                 Log.e("input", "cannot be deleted");
@@ -419,18 +375,13 @@ public class MainActivity extends AppCompatActivity {
 
         String type = getFileType(path);
         String pngType ="png";
-        String jpegType = "jpeg";
-        String jpgType = "jpg";
-        String pjpegType = "pjpeg";
 
         if (pngType.equals(type)) {
             return pngType;
-        }else if (jpegType.equals(type) || pjpegType.equals(type)|| jpgType.equals(type)) {
-            return jpegType;
         }else if (gone.equals(type)) {
             return gone;
         } else {
-            return null;
+            return wrongFileType;
         }
 
     }
@@ -477,11 +428,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("imageName", imageName);
                 fnDialog.dismiss();
-                if (imageType.equals("png")) {
-                    execQuantTask();
-                } else if (imageType.equals("jpeg")) {
-                    execCompressTask();
-                }
+                execQuantTask();
             }
         });
         fnDialog.show();
