@@ -38,7 +38,8 @@ public class AboutActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
                 if(pos == 0){
-
+                    Intent i = new Intent(AboutActivity.this, com.wrmndfzzy.atomize.LicenseActivity.class);
+                    startActivity(i);
                 }
                 else if(pos == 1){
                     aboutAppDialog();

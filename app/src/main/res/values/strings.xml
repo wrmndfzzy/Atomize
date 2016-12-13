@@ -27,5 +27,6 @@
     <string name="menu_about_label">About</string>
 
     <string name="aboutactivity_label">About</string>
+    <string name="licenseactivity_label">Licenses</string>
 
 </resources>

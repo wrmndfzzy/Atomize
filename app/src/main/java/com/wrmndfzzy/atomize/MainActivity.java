@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     //  Launch app intro
                     Intent i = new Intent(MainActivity.this, com.wrmndfzzy.atomize.intro.IntroActivity.class);
                     startActivity(i);
+                    //TODO: Add in an end user license agreement dialog
                     //  Make a new preferences editor
                     SharedPreferences.Editor e = getPrefs.edit();
                     //  Edit preference to make it false because we don't want this to run again

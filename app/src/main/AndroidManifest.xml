@@ -30,9 +30,18 @@
                 android:value="com.wrmndfzzy.atomize.MainActivity" />
         </activity>
         <activity
+            android:name=".LicenseActivity"
+            android:label="@string/licenseactivity_label"
+            android:parentActivityName=".AboutActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTTIVITY"
+                android:value="com.wrmndfzzy.atomize.AboutActivity" />
+        </activity>
+        <activity
             android:name=".intro.IntroActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/IntroTheme"/>
+            android:theme="@style/IntroTheme" />
     </application>
 
 </manifest>
