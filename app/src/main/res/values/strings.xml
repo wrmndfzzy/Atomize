@@ -23,10 +23,13 @@
     <string name="nameHint">Filename</string>
     <string name="cancelText">Cancel</string>
     <string name="confirmText">OK</string>
+    <string name="disagreeText">Disagree</string>
+    <string name="agreeText">Agree</string>
 
     <string name="menu_about_label">About</string>
 
     <string name="aboutactivity_label">About</string>
     <string name="licenseactivity_label">Licenses</string>
+    <string name="euLic_label">EU License</string>
 
 </resources>

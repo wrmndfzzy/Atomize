@@ -3,19 +3,23 @@ package com.wrmndfzzy.atomize.intro;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.paolorotolo.appintro.AppIntro2;
+import com.wrmndfzzy.atomize.MainActivity;
 import com.wrmndfzzy.atomize.R;
 
 import java.util.ArrayList;
@@ -25,11 +29,21 @@ public class IntroActivity extends AppIntro2 {
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
 
+    SharedPreferences getPrefs;
+
     Button pDialogConfirm;
 
     // Please DO NOT override onCreate. Use init.
     @Override
     public void init(Bundle savedInstanceState) {
+
+        getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        //  Create a new boolean and preference and set it to true
+        boolean agreedToLic = getPrefs.getBoolean("agreedToLicense", false);
+        //  If the activity has never started before...
+        if (!agreedToLic) {
+            applicenseDialog();
+        }
 
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#616161"));
@@ -61,9 +75,21 @@ public class IntroActivity extends AppIntro2 {
     public void onDonePressed() {
         // Do something when users tap on Done button.
         if ((ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||(ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+            //  Make a new preferences editor
+            SharedPreferences.Editor e = getPrefs.edit();
+            //  Edit preference to make it false because we don't want this to run again
+            e.putBoolean("firstStart", false);
+            //  Apply changes
+            e.apply();
             permissionsDialog();
         }
         else{
+            //  Make a new preferences editor
+            SharedPreferences.Editor e = getPrefs.edit();
+            //  Edit preference to make it false because we don't want this to run again
+            e.putBoolean("firstStart", false);
+            //  Apply changes
+            e.apply();
             IntroActivity.this.finish();
         }
     }
@@ -130,6 +156,45 @@ public class IntroActivity extends AppIntro2 {
                 break;
             }
         }
+    }
+
+    protected void applicenseDialog(){
+        final Dialog aLDialog = new Dialog(IntroActivity.this);
+        aLDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        aLDialog.setTitle("License Agreement");
+        aLDialog.setCancelable(false);
+        aLDialog.setCanceledOnTouchOutside(false);
+        aLDialog.setContentView(R.layout.app_license_dialog);
+        WebView lic = (WebView) aLDialog.findViewById(R.id.atomizeLic);
+        Button disagree = (Button) aLDialog.findViewById(R.id.alDialogDisagree);
+        Button agree = (Button) aLDialog.findViewById(R.id.alDialogAgree);
+        lic.getSettings().setUseWideViewPort(true);
+        lic.loadUrl("file:///android_asset/atomizeLicense.html");
+        disagree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                aLDialog.dismiss();
+                SharedPreferences.Editor e = getPrefs.edit();
+                e.putBoolean("agreedToLicense", false);
+                e.apply();
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.addCategory( Intent.CATEGORY_HOME );
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeIntent);
+                IntroActivity.this.finish();
+                MainActivity.getInstance().finish();
+            }
+        });
+        agree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor e = getPrefs.edit();
+                e.putBoolean("agreedToLicense", true);
+                e.apply();
+                aLDialog.dismiss();
+            }
+        });
+        aLDialog.show();
     }
 
     protected void permissionsDialog(){

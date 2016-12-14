@@ -1,6 +1,7 @@
 package com.wrmndfzzy.atomize;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -67,9 +68,17 @@ public class MainActivity extends AppCompatActivity {
     Button fnDialogCancel;
     Button fnDialogConfirm;
 
+    public static Activity mA;
+
+    public static Activity getInstance(){
+        return mA;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mA = this;
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -84,13 +93,6 @@ public class MainActivity extends AppCompatActivity {
                     //  Launch app intro
                     Intent i = new Intent(MainActivity.this, com.wrmndfzzy.atomize.intro.IntroActivity.class);
                     startActivity(i);
-                    //TODO: Add in an end user license agreement dialog
-                    //  Make a new preferences editor
-                    SharedPreferences.Editor e = getPrefs.edit();
-                    //  Edit preference to make it false because we don't want this to run again
-                    e.putBoolean("firstStart", false);
-                    //  Apply changes
-                    e.apply();
                 }
             }
         });
@@ -142,10 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(MainActivity.this, "Read permissions are required to run this app.", Toast.LENGTH_LONG).show();
-                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    /*Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                     homeIntent.addCategory( Intent.CATEGORY_HOME );
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
+                    MainActivity.this.finish();*/
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Read permissions granted!", Toast.LENGTH_SHORT).show();
@@ -160,10 +163,11 @@ public class MainActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(MainActivity.this, "Write permissions are required to run this app.", Toast.LENGTH_LONG).show();
-                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    /*Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                     homeIntent.addCategory( Intent.CATEGORY_HOME );
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
+                    MainActivity.this.finish();*/
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Write permissions granted!", Toast.LENGTH_SHORT).show();

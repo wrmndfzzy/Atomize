@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+    <Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/alDialogToolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/euLic_label"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textSize="20sp" />
+
+    </Toolbar>
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/atomizeLic"
+        android:layout_below="@id/alDialogToolbar"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:id="@+id/alDialogDisagree"
+        android:text="@string/disagreeText"
+        android:textColor="@color/colorAccent"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/atomizeLic"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/alDialogAgree"
+        android:text="@string/agreeText"
+        android:textColor="@color/colorAccent"
+        android:padding="10dp"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/atomizeLic"/>
+</RelativeLayout>
