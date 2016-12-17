@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
@@ -477,12 +478,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFABMenu(){
         isFABOpen=true;
+        float deg = fab.getRotation() + 135F;
+        fab.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
         atomButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         select.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
     }
 
     private void closeFABMenu(){
         isFABOpen=false;
+        float deg = fab.getRotation() - 135F;
+        fab.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
         atomButton.animate().translationY(0);
         select.animate().translationY(0);
     }
