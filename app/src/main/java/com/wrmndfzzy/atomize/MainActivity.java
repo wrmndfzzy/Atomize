@@ -271,7 +271,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.VISIBLE);
                 atomButton.setEnabled(false);
-                atomButton.setAlpha(0.4f);
+                atomButton.setAlpha(0.6f);
+                select.setEnabled(false);
+                select.setAlpha(0.6f);
             }
             @Override
             protected void onPostExecute(Void v){
@@ -285,6 +287,8 @@ public class MainActivity extends AppCompatActivity {
                 imgSelected = false;
                 atomButton.setEnabled(true);
                 atomButton.setAlpha(1.0f);
+                select.setEnabled(true);
+                select.setAlpha(1.0f);
             }
         }.execute();
     }

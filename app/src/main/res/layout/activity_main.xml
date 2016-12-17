@@ -21,21 +21,13 @@
         android:textAlignment="center"
         android:text="@string/no_image" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/devBy"
-        android:textSize="5pt"
-        android:text="@string/devBy"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:indeterminate="true"
-        android:layout_above="@id/devBy"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:id="@+id/progBar"
         android:layout_marginBottom="10dp"
         android:visibility="invisible"/>
@@ -44,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/deleteSwitch"
-        android:layout_above="@id/devBy"
+        android:layout_above="@id/progBar"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:checked="true"/>
