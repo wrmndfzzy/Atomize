@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -48,13 +50,14 @@ public class MainActivity extends AppCompatActivity {
     private static String selectedImagePath;
     private static String gone = "image does not exist";
     private boolean imgSelected = false;
+    private boolean isFABOpen = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
 
     private Switch deleteSwitch;
 
-    private Button atomButton;
+    private FloatingActionButton atomButton, fab, select;
 
     File input;
     File output;
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button fnDialogCancel;
     Button fnDialogConfirm;
+
 
     public static Activity mA;
 
@@ -102,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imgPath = (TextView) findViewById(R.id.imgPath);
-        final Button select = (Button) findViewById(R.id.select);
+        select = (FloatingActionButton) findViewById(R.id.fab2);
         preView = (ImageView) findViewById(R.id.imgPreview);
 
 
         deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
 
-        atomButton = (Button) findViewById(R.id.atomize);
+        atomButton = (FloatingActionButton) findViewById(R.id.fab1);
 
         quantProgress = (ProgressBar) findViewById(R.id.progBar);
 
@@ -130,6 +134,20 @@ public class MainActivity extends AppCompatActivity {
                 intent.setType("image/png");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+            }
+        });
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();*/
+
+                if(!isFABOpen){
+                    showFABMenu();
+                }else{
+                    closeFABMenu();
+                }
             }
         });
     }
@@ -455,5 +473,17 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showFABMenu(){
+        isFABOpen=true;
+        atomButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        select.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        atomButton.animate().translationY(0);
+        select.animate().translationY(0);
     }
 }
