@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +16,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textColor="#9e9e9e"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="false"
         android:textAlignment="center"
         android:text="@string/no_image" />
 
@@ -26,17 +27,27 @@
         android:layout_height="wrap_content"
         style="@android:style/Widget.Material.ProgressBar.Horizontal"
         android:indeterminate="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/progBar"
-        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
         android:visibility="invisible"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/atomize"
+        android:layout_centerHorizontal="true"
+        android:onClick="atomize"
+        android:color="@color/colorAccent"
+        android:src="@drawable/check"
+        android:layout_above="@id/progBar"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"/>
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/deleteSwitch"
-        android:layout_above="@id/progBar"
+        android:layout_above="@id/atomize"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:checked="true"/>
@@ -59,31 +70,4 @@
         android:layout_above="@id/deleteSwitchHint"
         android:src="@drawable/atom_watermark"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="@dimen/standard_45"
-        android:layout_height="@dimen/standard_45"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/standard_21"
-        app:srcCompat="@drawable/image" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab1"
-        android:layout_width="@dimen/standard_45"
-        android:layout_height="@dimen/standard_45"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/standard_21"
-        app:srcCompat="@drawable/atom"
-        android:onClick="atomize"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/plus" />
 </RelativeLayout>

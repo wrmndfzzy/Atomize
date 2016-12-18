@@ -1,13 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="standard_21">21dp</dimen>
-    <dimen name="standard_45">45dp</dimen>
-    <dimen name="standard_55">55dp</dimen>
-    <dimen name="standard_105">105dp</dimen>
-    <dimen name="standard_155">155dp</dimen>
-    <!--Floating action button-->
-    <dimen name="design_fab_image_size" tools:override="true">36dp</dimen>
 </resources>

@@ -27,12 +27,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -51,14 +49,13 @@ public class MainActivity extends AppCompatActivity {
     private static String selectedImagePath;
     private static String gone = "image does not exist";
     private boolean imgSelected = false;
-    private boolean isFABOpen = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
 
     private Switch deleteSwitch;
 
-    private FloatingActionButton atomButton, fab, select;
+    private FloatingActionButton atomButton;
 
     File input;
     File output;
@@ -71,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
     Button fnDialogCancel;
     Button fnDialogConfirm;
-
 
     public static Activity mA;
 
@@ -107,17 +103,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imgPath = (TextView) findViewById(R.id.imgPath);
-        select = (FloatingActionButton) findViewById(R.id.fab2);
         preView = (ImageView) findViewById(R.id.imgPreview);
 
 
         deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
 
-        atomButton = (FloatingActionButton) findViewById(R.id.fab1);
+        atomButton = (FloatingActionButton) findViewById(R.id.atomize);
 
         quantProgress = (ProgressBar) findViewById(R.id.progBar);
 
-        select.setOnClickListener(new View.OnClickListener() {
+        preView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -135,20 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.setType("image/png");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
-            }
-        });
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();*/
-
-                if(!isFABOpen){
-                    showFABMenu();
-                }else{
-                    closeFABMenu();
-                }
             }
         });
     }
@@ -270,25 +251,27 @@ public class MainActivity extends AppCompatActivity {
             protected void onPreExecute(){
                 Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.VISIBLE);
+                preView.setEnabled(false);
+                deleteSwitch.setEnabled(false);
                 atomButton.setEnabled(false);
-                atomButton.setAlpha(0.6f);
-                select.setEnabled(false);
-                select.setAlpha(0.6f);
+                deleteSwitch.setAlpha(0.4f);
+                atomButton.setAlpha(0.4f);
             }
             @Override
             protected void onPostExecute(Void v){
                 Log.d("quantize", "quantize done");
-                String noImgText = "No image selected.";
+                String noImgText = "Atomize successful! Tap the atom to select another image.";
                 Toast.makeText(MainActivity.this, "Done! Saved in /sdcard/Atomize.", Toast.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.INVISIBLE);
                 preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                 imgPath.setText(noImgText);
                 selectedImagePath = "";
                 imgSelected = false;
+                preView.setEnabled(true);
+                deleteSwitch.setEnabled(true);
                 atomButton.setEnabled(true);
+                deleteSwitch.setAlpha(1.0f);
                 atomButton.setAlpha(1.0f);
-                select.setEnabled(true);
-                select.setAlpha(1.0f);
             }
         }.execute();
     }
@@ -478,21 +461,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void showFABMenu(){
-        isFABOpen=true;
-        float deg = fab.getRotation() + 135F;
-        fab.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
-        atomButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-        select.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
-    }
-
-    private void closeFABMenu(){
-        isFABOpen=false;
-        float deg = fab.getRotation() - 135F;
-        fab.animate().rotation(deg).setInterpolator(new AccelerateDecelerateInterpolator());
-        atomButton.animate().translationY(0);
-        select.animate().translationY(0);
     }
 }

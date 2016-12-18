@@ -15,10 +15,10 @@
     <string name="intro_permissions_notification">NOTE: You have not given the app the permissions it requires to operate. You can always give the app the permissions later when it needs them.</string>
 
     <string name="select_photo">Select a photo</string>
-    <string name="no_image">No image selected.</string>
+    <string name="no_image">No image selected. Tap the atom to select an image.</string>
     <string name="devBy">Developed by Team Wrmndfzzy.</string>
     <string name="atomString">Atomize!</string>
-    <string name="delString">Delete original file when done?</string>
+    <string name="delString">Delete original file?</string>
     <string name="nameFile">Name the file you want to save:</string>
     <string name="nameHint">Filename</string>
     <string name="cancelText">Cancel</string>
