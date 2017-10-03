@@ -33,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.support.design.widget.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(MainActivity.this, "Read permissions are required to run this app.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Read permissions are required to run this app.", Snackbar.LENGTH_LONG).show();
                     /*Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                     homeIntent.addCategory( Intent.CATEGORY_HOME );
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.finish();*/
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Read permissions granted!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Read permissions granted!", Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(MainActivity.this, "Write permissions are required to run this app.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Write permissions are required to run this app.", Snackbar.LENGTH_LONG).show();
                     /*Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                     homeIntent.addCategory( Intent.CATEGORY_HOME );
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.finish();*/
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "Write permissions granted!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Write permissions granted!", Snackbar.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -190,13 +190,13 @@ public class MainActivity extends AppCompatActivity {
                     String imageType = handleImageType(selectedImagePath);
                     String selectedImageLocation = "Selected Image Path: " + selectedImagePath;
                     if (imageType.equals(gone)) {
-                        Toast.makeText(MainActivity.this, "Selected image has either been\n" +
-                                "deleted or already Atomized.", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Selected image has either been\n" +
+                                "deleted or already Atomized.", Snackbar.LENGTH_LONG).show();
                         imgPath.setText(invSel);
                         preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                         imgSelected = false;
                     } else if (imageType.equals(wrongFileType)) {
-                        Toast.makeText(MainActivity.this, "Please select a valid PNG file.", Toast.LENGTH_LONG).show();
+                        Snackbar.make(findViewById(android.R.id.content), "Please select a valid PNG file.", Snackbar.LENGTH_LONG).show();
                         imgPath.setText(invFile);
                         preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                         imgSelected = false;
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "Invalid File Path.", Toast.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Invalid File Path.", Snackbar.LENGTH_LONG).show();
                 }
             }
         }
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
             fileNameDialog();
         }
         else{
-            Toast.makeText(MainActivity.this, "Please select an image.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "Please select an image.", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             protected void onPreExecute(){
-                Toast.makeText(MainActivity.this, "Atomizing...", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Atomizing...", Snackbar.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.VISIBLE);
                 atomButton.setEnabled(false);
                 atomButton.setAlpha(0.4f);
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Void v){
                 Log.d("quantize", "quantize done");
                 String noImgText = "No image selected.";
-                Toast.makeText(MainActivity.this, "Done! Saved in /sdcard/Atomize.", Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), "Done! Saved in /sdcard/Atomize.", Snackbar.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.INVISIBLE);
                 preView.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.atom_watermark));
                 imgPath.setText(noImgText);
