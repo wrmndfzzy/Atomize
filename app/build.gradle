@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.wrmndfzzy.atomize"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -33,10 +33,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
 
     //https://github.com/zetbaitsu/Compressor
-    implementation 'id.zelory:compressor:1.0.3'
+    //implementation 'id.zelory:compressor:3.0.0'
 
     //https://github.com/AppIntro/AppIntro
-    implementation 'com.github.paolorotolo:appintro:3.4.0'
+    implementation 'com.github.AppIntro:AppIntro:5.1.0'
 
     //https://github.com/falnatsheh/MarkdownView
     implementation 'us.feras.mdv:markdownview:1.1.0'
