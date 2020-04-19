@@ -2,35 +2,42 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
+    buildToolsVersion "29.0.3"
+
     defaultConfig {
         applicationId "com.wrmndfzzy.atomize"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
+    }
 
-        }
+    compileOptions {
+        encoding = 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    implementation files('libs/pngquant-android-release.aar')
+
     implementation 'com.android.support:appcompat-v7:26.+'
     implementation 'com.android.support:design:26.+'
-    testImplementation 'junit:junit:4.12'
-    implementation project(':pngquant-android')
+
+    //https://github.com/zetbaitsu/Compressor
     implementation 'id.zelory:compressor:1.0.3'
+
+    //https://github.com/AppIntro/AppIntro
     implementation 'com.github.paolorotolo:appintro:3.4.0'
+
+    //https://github.com/falnatsheh/MarkdownView
     implementation 'us.feras.mdv:markdownview:1.1.0'
 }
