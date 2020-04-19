@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
     <TextView
+        android:id="@+id/ipDialogHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/intro_permissions_notification"
         android:layout_margin="20dp"
-        android:textSize="15sp"
-        android:id="@+id/ipDialogHint" />
+        android:text="@string/intro_permissions_notification"
+        android:textSize="15sp" />
 
     <Button
+        android:id="@+id/ipDialogConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ipDialogHint"
         android:layout_alignParentEnd="true"
-        android:id="@+id/ipDialogConfirm"
-        android:text="@string/confirmText"
-        android:textColor="@color/colorAccent"
+        android:background="@android:color/transparent"
         android:paddingBottom="10dp"
-        android:background="@android:color/transparent" />
+        android:text="@string/confirmText"
+        android:textColor="@color/colorAccent" />
 
 </RelativeLayout>

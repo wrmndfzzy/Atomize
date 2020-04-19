@@ -26,7 +26,7 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
-                android:name="android.support.PARENT_ACTTIVITY"
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wrmndfzzy.atomize.MainActivity" />
         </activity>
         <activity
@@ -35,7 +35,7 @@
             android:parentActivityName=".AboutActivity"
             android:screenOrientation="portrait">
             <meta-data
-                android:name="android.support.PARENT_ACTTIVITY"
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.wrmndfzzy.atomize.AboutActivity" />
         </activity>
         <activity

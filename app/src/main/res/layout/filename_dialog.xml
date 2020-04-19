@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorBackground">
 
     <TextView
+        android:id="@+id/fnDialogHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/nameFile"
         android:layout_margin="20dp"
-        android:id="@+id/fnDialogHint"
-        android:labelFor="@+id/fnDialogTextBox" />
+        android:labelFor="@+id/fnDialogTextBox"
+        android:text="@string/nameFile" />
 
     <EditText
+        android:id="@id/fnDialogTextBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/fnDialogHint"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:layout_below="@id/fnDialogHint"
-        android:id="@id/fnDialogTextBox"
-        android:textColor="@android:color/white"
         android:hint="@string/nameHint"
+        android:textColor="@android:color/white"
         android:textColorHint="@color/colorPrimary" />
 
     <Button
+        android:id="@+id/fnDialogCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fnDialogTextBox"
         android:layout_alignParentStart="true"
-        android:id="@+id/fnDialogCancel"
-        android:text="@string/cancelText"
-        android:textColor="@color/colorAccent"
+        android:background="@android:color/transparent"
         android:paddingBottom="10dp"
-        android:background="@android:color/transparent"/>
+        android:text="@string/cancelText"
+        android:textColor="@color/colorAccent" />
 
     <Button
+        android:id="@+id/fnDialogConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fnDialogTextBox"
         android:layout_alignParentEnd="true"
-        android:id="@+id/fnDialogConfirm"
-        android:text="@string/confirmText"
-        android:textColor="@color/colorAccent"
+        android:background="@android:color/transparent"
         android:paddingBottom="10dp"
-        android:background="@android:color/transparent" />
+        android:text="@string/confirmText"
+        android:textColor="@color/colorAccent" />
 
 </RelativeLayout>

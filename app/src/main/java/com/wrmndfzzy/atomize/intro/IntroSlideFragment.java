@@ -1,11 +1,12 @@
 package com.wrmndfzzy.atomize.intro;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class IntroSlideFragment extends Fragment {
 
@@ -18,7 +19,7 @@ public class IntroSlideFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static IntroSlideFragment newInstance(int layoutResId) {
+    static IntroSlideFragment newInstance(int layoutResId) {
         IntroSlideFragment introSlide = new IntroSlideFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT_RES_ID, layoutResId);

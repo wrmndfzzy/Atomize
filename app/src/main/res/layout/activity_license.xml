@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WebView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<WebView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/licViews"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/licViews"
-    tools:context="com.wrmndfzzy.atomize.LicenseActivity"/>
+    tools:context="com.wrmndfzzy.atomize.LicenseActivity" />
