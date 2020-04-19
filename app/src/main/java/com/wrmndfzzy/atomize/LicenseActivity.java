@@ -1,8 +1,9 @@
 package com.wrmndfzzy.atomize;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LicenseActivity extends AppCompatActivity {
 
