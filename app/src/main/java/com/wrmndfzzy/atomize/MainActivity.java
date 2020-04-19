@@ -36,6 +36,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.wrmndfzzy.atomize.intro.IntroActivity;
 import com.wrmndfzzy.pngquant.LibPngQuant;
 
 import java.io.File;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                        Uri.parse("content://downloads/public_downloads"), Long.parseLong(id));
 
                 return getDataColumn(context, contentUri, null, null);
             }
@@ -173,20 +174,17 @@ public class MainActivity extends AppCompatActivity {
 
         mA = this;
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //  Initialize SharedPreferences
-                SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
-                //  Create a new boolean and preference and set it to true
-                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
-                //  If the activity has never started before...
-                if (isFirstStart) {
-                    //  Launch app intro
-                    Intent i = new Intent(MainActivity.this, com.wrmndfzzy.atomize.intro.IntroActivity.class);
-                    startActivity(i);
-                }
+        Thread t = new Thread(() -> {
+            //  Initialize SharedPreferences
+            SharedPreferences getPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(getBaseContext());
+            //  Create a new boolean and preference and set it to true
+            boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+            //  If the activity has never started before...
+            if (isFirstStart) {
+                //  Launch app intro
+                Intent i = new Intent(MainActivity.this, IntroActivity.class);
+                startActivity(i);
             }
         });
         // Start the thread
@@ -194,40 +192,37 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        imgPath = (TextView) findViewById(R.id.imgPath);
-        final Button select = (Button) findViewById(R.id.select);
-        preView = (ImageView) findViewById(R.id.imgPreview);
+        imgPath = findViewById(R.id.imgPath);
+        final Button select = findViewById(R.id.select);
+        preView = findViewById(R.id.imgPreview);
 
 
-        deleteSwitch = (Switch) findViewById(R.id.deleteSwitch);
+        deleteSwitch = findViewById(R.id.deleteSwitch);
 
-        atomButton = (Button) findViewById(R.id.atomize);
+        atomButton = findViewById(R.id.atomize);
 
-        quantProgress = (ProgressBar) findViewById(R.id.progBar);
+        quantProgress = findViewById(R.id.progBar);
 
-        select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+        select.setOnClickListener(v -> {
+            try {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Intent intent = new Intent();
-                intent.setType("image/png");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            Intent intent = new Intent();
+            intent.setType("image/png");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
         });
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
@@ -395,33 +390,25 @@ public class MainActivity extends AppCompatActivity {
         fnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fnDialog.setTitle("File Name");
         fnDialog.setContentView(R.layout.filename_dialog);
-        fnEdit = (EditText) fnDialog.findViewById(R.id.fnDialogTextBox);
+        fnEdit = fnDialog.findViewById(R.id.fnDialogTextBox);
         imageName = input.getName();
         fnEdit.setText(imageName);
-        fnDialogCancel = (Button) fnDialog.findViewById(R.id.fnDialogCancel);
-        fnDialogCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fnDialog.dismiss();
+        fnDialogCancel = fnDialog.findViewById(R.id.fnDialogCancel);
+        fnDialogCancel.setOnClickListener(v -> fnDialog.dismiss());
+        fnDialogConfirm = fnDialog.findViewById(R.id.fnDialogConfirm);
+        fnDialogConfirm.setOnClickListener(v -> {
+            if ((fnEdit.getText().toString().indexOf(".png") == (fnEdit.getText().toString().length() - 4)) && fnEdit.getText().toString().length() != 3) {
+                imageName = fnEdit.getText().toString();
+            } else if (fnEdit.getText().toString().length() == 3) {
+                imageName = fnEdit.getText().toString() + ".png";
+            } else if (fnEdit.getText().toString().length() < 1) {
+                imageName = input.getName();
+            } else {
+                imageName = fnEdit.getText().toString() + ".png";
             }
-        });
-        fnDialogConfirm = (Button) fnDialog.findViewById(R.id.fnDialogConfirm);
-        fnDialogConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((fnEdit.getText().toString().indexOf(".png") == (fnEdit.getText().toString().length() - 4)) && fnEdit.getText().toString().length() != 3) {
-                    imageName = fnEdit.getText().toString();
-                } else if (fnEdit.getText().toString().length() == 3) {
-                    imageName = fnEdit.getText().toString() + ".png";
-                } else if (fnEdit.getText().toString().length() < 1) {
-                    imageName = input.getName();
-                } else {
-                    imageName = fnEdit.getText().toString() + ".png";
-                }
-                Log.d("imageName", imageName);
-                fnDialog.dismiss();
-                execQuantTask();
-            }
+            Log.d("imageName", imageName);
+            fnDialog.dismiss();
+            execQuantTask();
         });
         fnDialog.show();
     }
@@ -434,13 +421,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_aboutlink:
-                Intent i = new Intent(this, AboutActivity.class);
-                startActivity(i);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.menu_aboutlink) {
+            Intent i = new Intent(this, AboutActivity.class);
+            startActivity(i);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

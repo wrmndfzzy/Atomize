@@ -117,7 +117,7 @@ public class IntroActivity extends AppIntro2 {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
@@ -162,34 +162,28 @@ public class IntroActivity extends AppIntro2 {
         aLDialog.setCancelable(false);
         aLDialog.setCanceledOnTouchOutside(false);
         aLDialog.setContentView(R.layout.app_license_dialog);
-        WebView lic = (WebView) aLDialog.findViewById(R.id.atomizeLic);
-        Button disagree = (Button) aLDialog.findViewById(R.id.alDialogDisagree);
-        Button agree = (Button) aLDialog.findViewById(R.id.alDialogAgree);
+        WebView lic = aLDialog.findViewById(R.id.atomizeLic);
+        Button disagree = aLDialog.findViewById(R.id.alDialogDisagree);
+        Button agree = aLDialog.findViewById(R.id.alDialogAgree);
         lic.getSettings().setUseWideViewPort(true);
         lic.loadUrl("file:///android_asset/atomizeLicense.html");
-        disagree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aLDialog.dismiss();
-                SharedPreferences.Editor e = getPrefs.edit();
-                e.putBoolean("agreedToLicense", false);
-                e.apply();
-                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory(Intent.CATEGORY_HOME);
-                homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(homeIntent);
-                IntroActivity.this.finish();
-                MainActivity.getInstance().finish();
-            }
+        disagree.setOnClickListener(v -> {
+            aLDialog.dismiss();
+            SharedPreferences.Editor e = getPrefs.edit();
+            e.putBoolean("agreedToLicense", false);
+            e.apply();
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(homeIntent);
+            IntroActivity.this.finish();
+            MainActivity.getInstance().finish();
         });
-        agree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor e = getPrefs.edit();
-                e.putBoolean("agreedToLicense", true);
-                e.apply();
-                aLDialog.dismiss();
-            }
+        agree.setOnClickListener(v -> {
+            SharedPreferences.Editor e = getPrefs.edit();
+            e.putBoolean("agreedToLicense", true);
+            e.apply();
+            aLDialog.dismiss();
         });
         aLDialog.show();
     }
@@ -199,13 +193,10 @@ public class IntroActivity extends AppIntro2 {
         pDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pDialog.setTitle("Missing Permissions");
         pDialog.setContentView(R.layout.intro_permissions_dialog);
-        pDialogConfirm = (Button) pDialog.findViewById(R.id.ipDialogConfirm);
-        pDialogConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pDialog.dismiss();
-                IntroActivity.this.finish();
-            }
+        pDialogConfirm = pDialog.findViewById(R.id.ipDialogConfirm);
+        pDialogConfirm.setOnClickListener(v -> {
+            pDialog.dismiss();
+            IntroActivity.this.finish();
         });
         pDialog.show();
     }

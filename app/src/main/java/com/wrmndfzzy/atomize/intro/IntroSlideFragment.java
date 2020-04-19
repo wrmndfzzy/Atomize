@@ -19,7 +19,7 @@ public class IntroSlideFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static IntroSlideFragment newInstance(int layoutResId) {
+    static IntroSlideFragment newInstance(int layoutResId) {
         IntroSlideFragment introSlide = new IntroSlideFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT_RES_ID, layoutResId);

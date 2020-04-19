@@ -2,11 +2,11 @@
     <string name="app_name">Atomize</string>
 
     <string name="intro_slide1_title">Welcome to Atomize!</string>
-    <string name="intro_slide1_content">The best PNG image compression app for Android</string>
+    <string name="intro_slide1_content">Arguably the best PNG image compression app for Android</string>
     <string name="intro_slide2_title">Free up space on your phone</string>
-    <string name="intro_slide2_content">Reduce the file size of your pictures through compression and save space for other files</string>
+    <string name="intro_slide2_content">Reduce the file size of your pictures through compression and save space for other files.</string>
     <string name="intro_slide3_title">High quality compression</string>
-    <string name="intro_slide3_content">Save space with a negligible loss in image quality and no change in resolution</string>
+    <string name="intro_slide3_content">Save space with a negligible loss in image quality and no change in resolution.</string>
     <string name="intro_slide4_title">Permissions</string>
     <string name="intro_slide4_content">Atomize requires read and write permissions for storage</string>
     <string name="intro_slide4_button">Grant Permissions</string>
@@ -16,7 +16,7 @@
 
     <string name="select_photo">Select a photo</string>
     <string name="no_image">No image selected.</string>
-    <string name="devBy">Developed by Team Wrmndfzzy.</string>
+    <string name="devBy">Developed by Team Wrmndfzzy</string>
     <string name="atomString">Atomize!</string>
     <string name="delString">Delete original file when done?</string>
     <string name="nameFile">Name the file you want to save:</string>
