@@ -12,15 +12,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,45 +34,136 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.support.design.widget.Snackbar;
+
+import com.wrmndfzzy.pngquant.LibPngQuant;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.wrmndfzzy.pngquant.LibPngQuant;
-
 public class MainActivity extends AppCompatActivity {
 
-    private TextView imgPath;
-    private ImageView preView;
-    private static final int SELECT_PICTURE = 1;
-    private static String selectedImagePath;
-    private static String gone = "image does not exist";
-    private boolean imgSelected = false;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 2;
+    private static final int SELECT_PICTURE = 1;
+    public static Activity mA;
+    private static String selectedImagePath;
+    private static String gone = "image does not exist";
+    public String imageName;
     File extFolder = new File(Environment.getExternalStorageDirectory() + "/Atomize");
-
-    private Switch deleteSwitch;
-
-    private Button atomButton;
-
     File input;
     File output;
-    private EditText fnEdit;
-    public String imageName;
-
-    private ProgressBar quantProgress;
-
-    private String wrongFileType="wrongfiletype";
-
     Button fnDialogCancel;
     Button fnDialogConfirm;
+    private TextView imgPath;
+    private ImageView preView;
+    private boolean imgSelected = false;
+    private Switch deleteSwitch;
+    private Button atomButton;
+    private EditText fnEdit;
+    private ProgressBar quantProgress;
+    private String wrongFileType = "wrongfiletype";
 
-    public static Activity mA;
-
-    public static Activity getInstance(){
+    public static Activity getInstance() {
         return mA;
+    }
+
+    // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
+    public static String getPath(final Context context, final Uri uri) {
+        // DocumentProvider
+        if (DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type))
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type))
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                else if ("video".equals(type))
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                else if ("audio".equals(type))
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme()))
+            return getDataColumn(context, uri, null, null);
+            // File
+        else if ("file".equalsIgnoreCase(uri.getScheme()))
+            return uri.getPath();
+
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static String getFileType(String path) {
+        File input = new File(path);
+        if (!input.exists())
+            return gone;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        Log.d("getFileType", extension);
+        return extension;
     }
 
     @Override
@@ -121,8 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -149,8 +240,7 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                     MainActivity.this.finish();*/
-                }
-                else{
+                } else {
                     Snackbar.make(findViewById(android.R.id.content), "Read permissions granted!", Snackbar.LENGTH_LONG).show();
                 }
                 break;
@@ -168,8 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                     MainActivity.this.finish();*/
-                }
-                else{
+                } else {
                     Snackbar.make(findViewById(android.R.id.content), "Write permissions granted!", Snackbar.LENGTH_LONG).show();
                 }
                 break;
@@ -211,8 +300,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                }
-                else {
+                } else {
                     Snackbar.make(findViewById(android.R.id.content), "Invalid File Path.", Snackbar.LENGTH_LONG).show();
                 }
             }
@@ -221,25 +309,23 @@ public class MainActivity extends AppCompatActivity {
 
     // listen for atomize once picture is chosen
     public void atomize(View v) {
-        if(imgSelected){
-            if(!extFolder.exists() && !extFolder.isDirectory()){
-                try{
-                    if(!extFolder.mkdirs())
+        if (imgSelected) {
+            if (!extFolder.exists() && !extFolder.isDirectory()) {
+                try {
+                    if (!extFolder.mkdirs())
                         Log.e("extFolder", "directory cannot be create");
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     //fileProbDialog();
                 }
             }
             input = new File(selectedImagePath);
             fileNameDialog();
-        }
-        else{
+        } else {
             Snackbar.make(findViewById(android.R.id.content), "Please select an image.", Snackbar.LENGTH_SHORT).show();
         }
     }
 
-    public void execQuantTask(){
+    public void execQuantTask() {
         output = new File(extFolder + "/" + imageName);
         new AsyncTask<Object, Object, Void>() {
             @Override
@@ -247,15 +333,17 @@ public class MainActivity extends AppCompatActivity {
                 quantize();
                 return null;
             }
+
             @Override
-            protected void onPreExecute(){
+            protected void onPreExecute() {
                 Snackbar.make(findViewById(android.R.id.content), "Atomizing...", Snackbar.LENGTH_SHORT).show();
                 quantProgress.setVisibility(View.VISIBLE);
                 atomButton.setEnabled(false);
                 atomButton.setAlpha(0.4f);
             }
+
             @Override
-            protected void onPostExecute(Void v){
+            protected void onPostExecute(Void v) {
                 Log.d("quantize", "quantize done");
                 String noImgText = "No image selected.";
                 Snackbar.make(findViewById(android.R.id.content), "Done! Saved in /sdcard/Atomize.", Snackbar.LENGTH_SHORT).show();
@@ -286,104 +374,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // File path methods taken from aFileChooser, thanks to iPaulPro: https://github.com/iPaulPro/aFileChooser
-    public static String getPath(final Context context, final Uri uri) {
-        // DocumentProvider
-        if (DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type))
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type))
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                else if ("video".equals(type))
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                else if ("audio".equals(type))
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme()))
-            return getDataColumn(context, uri, null, null);
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme()))
-            return uri.getPath();
-
-        return null;
-    }
-
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
     public String handleImageType(String path) {
 
         String type = getFileType(path);
-        String pngType ="png";
+        String pngType = "png";
 
         if (pngType.equals(type)) {
             return pngType;
-        }else if (gone.equals(type)) {
+        } else if (gone.equals(type)) {
             return gone;
         } else {
             return wrongFileType;
@@ -391,16 +389,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static String getFileType(String path) {
-        File input = new File(path);
-        if (!input.exists())
-            return gone;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
-        Log.d("getFileType", extension);
-        return extension;
-    }
-
-    protected void fileNameDialog(){
+    protected void fileNameDialog() {
         final Dialog fnDialog = new Dialog(MainActivity.this);
         fnDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fnDialog.setTitle("File Name");
@@ -419,16 +408,13 @@ public class MainActivity extends AppCompatActivity {
         fnDialogConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if((fnEdit.getText().toString().indexOf(".png") == (fnEdit.getText().toString().length()-4)) && fnEdit.getText().toString().length() != 3){
+                if ((fnEdit.getText().toString().indexOf(".png") == (fnEdit.getText().toString().length() - 4)) && fnEdit.getText().toString().length() != 3) {
                     imageName = fnEdit.getText().toString();
-                }
-                else if(fnEdit.getText().toString().length() == 3){
+                } else if (fnEdit.getText().toString().length() == 3) {
                     imageName = fnEdit.getText().toString() + ".png";
-                }
-                else if(fnEdit.getText().toString().length() < 1){
+                } else if (fnEdit.getText().toString().length() < 1) {
                     imageName = input.getName();
-                }
-                else{
+                } else {
                     imageName = fnEdit.getText().toString() + ".png";
                 }
                 Log.d("imageName", imageName);
@@ -447,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_aboutlink:
                 Intent i = new Intent(this, AboutActivity.class);
                 startActivity(i);

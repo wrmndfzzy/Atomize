@@ -53,7 +53,7 @@ public class IntroActivity extends AppIntro2 {
         addSlide(IntroSlideFragment.newInstance(R.layout.intro_slide1));
         addSlide(IntroSlideFragment.newInstance(R.layout.intro_slide2));
         addSlide(IntroSlideFragment.newInstance(R.layout.intro_slide3));
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             addSlide(IntroSlideFragment.newInstance(R.layout.intro_slide4));
             colors.add(Color.parseColor("#1B5E20"));
         }
@@ -74,7 +74,7 @@ public class IntroActivity extends AppIntro2 {
     @Override
     public void onDonePressed() {
         // Do something when users tap on Done button.
-        if ((ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||(ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+        if ((ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) || (ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
             //  Make a new preferences editor
             SharedPreferences.Editor e = getPrefs.edit();
             //  Edit preference to make it false because we don't want this to run again
@@ -82,8 +82,7 @@ public class IntroActivity extends AppIntro2 {
             //  Apply changes
             e.apply();
             permissionsDialog();
-        }
-        else{
+        } else {
             //  Make a new preferences editor
             SharedPreferences.Editor e = getPrefs.edit();
             //  Edit preference to make it false because we don't want this to run again
@@ -104,15 +103,14 @@ public class IntroActivity extends AppIntro2 {
         // Do something when users tap on Next button.
     }
 
-    public void introPermissions(View v){
+    public void introPermissions(View v) {
         try {
             if (ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(IntroActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
             if (ContextCompat.checkSelfPermission(IntroActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(IntroActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -128,11 +126,10 @@ public class IntroActivity extends AppIntro2 {
                     // functionality that depends on this permission.
                     Toast.makeText(IntroActivity.this, "Read permissions are required to run this app.", Toast.LENGTH_LONG).show();
                     Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                    homeIntent.addCategory( Intent.CATEGORY_HOME );
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
-                }
-                else{
+                } else {
                     Toast.makeText(IntroActivity.this, "Read permissions granted!", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -146,11 +143,10 @@ public class IntroActivity extends AppIntro2 {
                     // functionality that depends on this permission.
                     Toast.makeText(IntroActivity.this, "Write permissions are required to run this app.", Toast.LENGTH_LONG).show();
                     Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                    homeIntent.addCategory( Intent.CATEGORY_HOME );
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
-                }
-                else{
+                } else {
                     Toast.makeText(IntroActivity.this, "Write permissions granted!", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -158,7 +154,7 @@ public class IntroActivity extends AppIntro2 {
         }
     }
 
-    protected void applicenseDialog(){
+    protected void applicenseDialog() {
         final Dialog aLDialog = new Dialog(IntroActivity.this);
         aLDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         aLDialog.setTitle("License Agreement");
@@ -178,7 +174,7 @@ public class IntroActivity extends AppIntro2 {
                 e.putBoolean("agreedToLicense", false);
                 e.apply();
                 Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.addCategory( Intent.CATEGORY_HOME );
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
                 IntroActivity.this.finish();
@@ -197,7 +193,7 @@ public class IntroActivity extends AppIntro2 {
         aLDialog.show();
     }
 
-    protected void permissionsDialog(){
+    protected void permissionsDialog() {
         final Dialog pDialog = new Dialog(IntroActivity.this);
         pDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         pDialog.setTitle("Missing Permissions");

@@ -2,14 +2,15 @@ package com.wrmndfzzy.atomize;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
 import us.feras.mdv.MarkdownView;
 
 public class AboutActivity extends AppCompatActivity {
@@ -32,23 +33,20 @@ public class AboutActivity extends AppCompatActivity {
         addClickListener();
     }
 
-    private void addClickListener(){
+    private void addClickListener() {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
-                if(pos == 0){
+                if (pos == 0) {
                     Intent i = new Intent(AboutActivity.this, com.wrmndfzzy.atomize.LicenseActivity.class);
                     startActivity(i);
-                }
-                else if(pos == 1){
+                } else if (pos == 1) {
                     aboutAppDialog();
-                }
-                else if(pos == 2){
+                } else if (pos == 2) {
                     aboutWrmndfzzyDialog();
 
-                }
-                else{
+                } else {
                     Intent i = new Intent(AboutActivity.this, com.wrmndfzzy.atomize.intro.IntroActivity.class);
                     startActivity(i);
                 }
@@ -56,7 +54,7 @@ public class AboutActivity extends AppCompatActivity {
         });
     }
 
-    protected void aboutAppDialog(){
+    protected void aboutAppDialog() {
         final Dialog aaDialog = new Dialog(AboutActivity.this);
         aaDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         aaDialog.setTitle("About App");
@@ -73,7 +71,7 @@ public class AboutActivity extends AppCompatActivity {
         aaDialog.show();
     }
 
-    protected void aboutWrmndfzzyDialog(){
+    protected void aboutWrmndfzzyDialog() {
         final Dialog awDialog = new Dialog(AboutActivity.this);
         awDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         awDialog.setTitle("About Wrmndfzzy");
