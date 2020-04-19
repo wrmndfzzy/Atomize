@@ -1,13 +1,5 @@
-# IntelliJ IDEA
-.idea
+.idea/
 *.iml
-classes
-
-# Gradle
-.gradle
-build
+.gradle/
+build/
 local.properties
-
-*~
-ndk.bin
-android-ndk-r10e/
