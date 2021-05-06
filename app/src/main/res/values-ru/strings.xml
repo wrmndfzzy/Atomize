@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Atomize</string>
+
+    <string name="intro_slide1_title">Добро пожаловать в Atomize!</string>
+    <string name="intro_slide1_content">Лучшее приложение для сжатия изображений PNG для Android</string>
+    <string name="intro_slide2_title">Освобождает место на вашем телефоне</string>
+    <string name="intro_slide2_content">Уменьшает размер файла вашего изображения через сжатие и сохранение места для других файлов</string>
+    <string name="intro_slide3_title">Высокое качество сжатия</string>
+    <string name="intro_slide3_content">Сохраняет место с незначительными потерями в качестве изображения и не изменяет в разрешении</string>
+    <string name="intro_slide4_title">Разрешения</string>
+    <string name="intro_slide4_content">Atomize нужны разрешения чтения и записи в память</string>
+    <string name="intro_slide4_button">Получить разрешения</string>
+    <string name="intro_slide5_title">Поехали!</string>
+    <string name="intro_slide5_content">Нажмите кнопку ниже чтобы начать</string>
+    <string name="intro_permissions_notification">ЗАМЕТКА: Вы не дали приложению разрешений, это требуется для работы.\n
+    Вы можете всегда дать приложению разрешения позже, когда потребуется они.</string>
+
+    <string name="select_photo">Выберите фото</string>
+    <string name="no_image">Нет выбранного изображения.</string>
+    <string name="devBy">Разработано от Team Wrmndfzzy.</string>
+    <string name="delString">Удалить оригинальный файл, как будет готовый?</string>
+    <string name="nameFile">Назовите файл который вы хотите сохранить:</string>
+    <string name="nameHint">Имя файла</string>
+    <string name="cancelText">Отмена</string>
+    <string name="disagreeText">Не согласен</string>
+    <string name="agreeText">Согласен</string>
+
+    <string name="menu_about_label">О Atomize</string>
+
+    <string name="aboutactivity_label">О Atomize</string>
+    <string name="licenseactivity_label">Лицензия</string>
+    <string name="euLic_label">EU Лицензия</string>
+
+</resources>
