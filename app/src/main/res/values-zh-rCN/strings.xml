@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Atomize</string>
+    <string name="intro_slide1_title">欢迎使用Atomize</string>
+    <string name="intro_slide1_content">安卓上最好的PNG压缩软件</string>
+    <string name="intro_slide2_title">释放手机空间</string>
+    <string name="intro_slide2_content">通过压缩图片体积为其它文件腾出空间</string>
+    <string name="intro_slide3_title">低损压缩</string>
+    <string name="intro_slide3_content">在不改变图片分辨率，损失较少画质的前提下释放空间</string>
+    <string name="intro_slide4_title">权限</string>
+    <string name="intro_slide4_content">Atomize需要文件读写权限</string>
+    <string name="intro_slide4_button">获得权限</string>
+    <string name="intro_slide5_title">开始吧！</string>
+    <string name="intro_slide5_content">点击下方按钮开始</string>
+    <string name="intro_permissions_notification">注意：你并没有授予这个APP必要权限。你可以每次该软件请求授权时延后授予</string>
+    <string name="select_photo">选择一个照片</string>
+    <string name="no_image">没有选中任何照片</string>
+    <string name="delString">在完成压缩后删除原照片？</string>
+    <string name="nameFile">给你要保存的文件起个名字：</string>
+    <string name="nameHint">文件名</string>
+    <string name="cancelText">取消</string>
+    <string name="confirmText">确认</string>
+    <string name="disagreeText">不同意</string>
+    <string name="agreeText">同意</string>
+    <string name="menu_about_label">关于</string>
+    <string name="aboutactivity_label">关于</string>
+</resources>
